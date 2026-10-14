@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"></head><body>
+<title>오픈현황</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 상단 요약 → 시트 탭 → 검색/필터 → 표. 청회색 바탕 + 청록 포인트 */
+:root{color-scheme:dark;--bg:#000;--surface:#121314;--fg:#e9e9e6;--mut:#9a9d9f;--line:#2b2d30;--acc:#3cc4bb;--acc-fg:#07201f;--warn:#f0b35a;--warn-bg:#35280f;--ok:#6fd49b;--ok-bg:#12301f;--row:#1a1b1d;--bad:#ff7b72;--gap:#1b4340;--k-new:#ff8a82;--k-new-bg:#3a1a1a;--k-chg:#7fb2ff;--k-chg-bg:#15283f;--k-corp:#d9a066;--k-corp-bg:#33261a}
+.ppl,.wrap,.pc,.dlgp{color-scheme:light;color:var(--fg);--surface:#fff;--fg:#14202b;--mut:#5d6b78;--line:#dde3e8;--row:#f0f4f6;--acc:#0b7a75;--acc-fg:#fff;--ok-bg:#e1f3e9;--bad:#c62828;--gap:#cde9e6;--k-new:#c62828;--k-new-bg:#fde4e2;--k-chg:#1d5fc4;--k-chg-bg:#e0ebfb;--k-corp:#7a4a1e;--k-corp-bg:#f1e3d3;--k-yang:#1b7a46;--k-yang-bg:#d9f1e3;--k-jeon:#6a3fb8;--k-jeon-bg:#e8defa;--k-myeong:#b4540a;--k-myeong-bg:#fde5cc}
+body{background:var(--bg);color:var(--fg);font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;font-size:14px;line-height:1.5;padding-inline:16px;padding-block:20px}
+.page{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-.01em}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.upd{color:var(--mut);font-size:12px;font-variant-numeric:tabular-nums}
+.sum{display:flex;gap:10px;flex-wrap:wrap}
+.sum button{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:130px;box-sizing:border-box}
+.sum button[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.sum b{display:block;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.2}
+.sum span{color:var(--mut);font-size:12px}
+.ppl{display:flex;gap:6px;flex-wrap:wrap}
+.ppl button{all:unset;cursor:pointer;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px}
+.ppl button span{color:var(--mut);font-size:12px;margin-left:4px;font-variant-numeric:tabular-nums}
+.ppl button[aria-pressed=true]{background:#6b7078;border-color:#6b7078;color:#fff}
+.ppl button[aria-pressed=true] span{color:inherit;opacity:.8}
+button:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit}
+.cnt{color:var(--mut);font-size:12px;margin-left:auto}
+.note{color:var(--mut);font-size:12px}
+.tables{display:flex;flex-direction:column;gap:28px}
+.tables h2{margin:0 0 10px 2px;font-size:16px;font-weight:700;color:var(--fg)}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);}
+table{table-layout:fixed;min-width:800px;color:var(--fg);border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 3px;font-size:12px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:center}
+th:last-child,td:last-child{border-right:0}
+thead th{position:sticky;top:0;background:var(--row);color:var(--mut);font-size:11.5px;font-weight:600;z-index:2;white-space:normal;word-break:keep-all;line-height:1.25}
+tbody tr:nth-child(even) td{background:var(--row)}
+tbody tr:hover td{background:var(--ok-bg)}
+td.nm{font-weight:700;position:sticky;left:0;background:var(--surface);z-index:1}
+tbody tr:nth-child(even) td.nm{background:var(--row)}
+thead th.nm{left:0;z-index:3}
+thead th{height:34px;padding-top:0;padding-bottom:0;vertical-align:middle}
+table.all thead th{height:34px;padding-left:20px;padding-right:20px}
+table.all td.nm,table.all th.nm{left:0;box-shadow:2px 0 0 var(--line)}
+.fb{display:inline-block;position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:1px 5px;border-radius:5px;cursor:pointer;color:#5b6772;font-size:13px;line-height:1.2;font-weight:400;background:#e3e8ec}
+.fb:hover{background:#dbe2e8}.fb.on{background:#0a5f5a;color:#fff}
+#fpop{position:fixed;z-index:50;width:230px;max-height:360px;display:flex;flex-direction:column;background:#fff;color:#1c2126;border:1px solid #cfd6dc;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.35);padding:8px;font-size:13px}
+#fpop[hidden]{display:none}
+#fpop input[type=search]{width:100%;box-sizing:border-box;border:1px solid #cfd6dc;border-radius:7px;padding:6px 8px;font:inherit;margin-bottom:6px}
+#fpop .fl{overflow:auto;flex:1;min-height:60px}
+#fpop label{display:flex;align-items:center;gap:7px;padding:4px 4px;border-radius:5px;cursor:pointer}
+#fpop label:hover{background:#eef3f5}#fpop label[hidden]{display:none}
+#fpop label span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#fpop label em{font-style:normal;color:#7b8794;font-size:11.5px}
+#fpop .fa{display:flex;gap:4px;border-top:1px solid #e3e8ec;margin-top:6px;padding-top:6px}
+#fpop .fa button{flex:1;border:1px solid #cfd6dc;background:#f4f6f8;border-radius:7px;padding:5px 2px;font:inherit;font-size:11.5px;cursor:pointer;color:#1c2126}
+.wrap.wall{max-height:max(320px,calc(100vh - 236px));overflow:auto}
+td.nm,th.nm{text-align:center}
+.tag{font-size:12px;padding:1px 8px;border-radius:999px;background:var(--row);color:var(--mut);border:1px solid var(--line)}
+.tag.k-new{color:var(--k-new);background:var(--k-new-bg);border-color:transparent;font-weight:700}
+.tag.k-chg{color:var(--k-chg);background:var(--k-chg-bg);border-color:transparent;font-weight:700}
+.tag.k-corp{color:var(--k-corp);background:var(--k-corp-bg);border-color:transparent;font-weight:700}
+.ts{display:inline-flex;border-radius:999px;overflow:hidden;vertical-align:middle;max-width:100%}
+.ts i{font-style:normal;font-size:11.5px;font-weight:700;padding:1px 7px;white-space:nowrap}
+.ts i.c-new{color:var(--k-new);background:var(--k-new-bg)}
+.ts i.c-chg{color:var(--k-chg);background:var(--k-chg-bg)}
+.ts i.c-corp{color:var(--k-corp);background:var(--k-corp-bg)}
+.ts i.c-yang{color:var(--k-yang);background:var(--k-yang-bg)}
+.ts i.c-jeon{color:var(--k-jeon);background:var(--k-jeon-bg)}
+.ts i.c-myeong{color:var(--k-myeong);background:var(--k-myeong-bg)}
+.ts i.c-x{color:var(--mut);background:var(--row)}
+.bad{color:var(--bad);font-weight:700}
+.gap td{height:28px;padding:0;background:#000;border:0}
+.na{color:var(--mut)}
+td.pr{text-align:left;padding:3px 8px;font-size:11.5px;white-space:normal;word-break:keep-all;overflow:visible;text-overflow:clip;line-height:1.2}
+tbody tr[data-k],.pc li[data-k]{cursor:pointer}
+.pc li[data-k]:hover,.pc li[data-k]:active{background:var(--row)}
+tbody tr[data-k]:active td{background:var(--ok-bg)}
+.dlg{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg[hidden]{display:none}
+.dlgp{position:relative;background:var(--surface);border-radius:10px;width:100%;max-width:440px;max-height:100%;overflow:auto;padding:22px 20px 20px}
+.dlgp h3{margin:0 40px 6px 0;font-size:22px;line-height:1.25;overflow-wrap:anywhere}
+.dk{margin-bottom:14px}
+.dx{position:absolute;top:12px;right:12px;width:36px;height:36px;border:0;border-radius:50%;background:var(--row);color:var(--fg);font-size:16px;cursor:pointer}
+.dl{margin:6px 0 0}
+.dl .r{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;padding:13px 0;border-top:1px solid var(--line)}
+.dl dt,.dl dd{margin:0}
+.dl dt{color:var(--mut);font-size:13px}
+.dl dd{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:640px){.dlg{padding:0;align-items:stretch}.dlgp{max-width:none;border-radius:0;padding:26px 20px 24px;display:flex;flex-direction:column}#dbody{flex:1;display:flex;flex-direction:column}.dl{flex:1;display:flex;flex-direction:column}.dl .r{flex:1}.dl dd{font-size:19px}.dl dt{font-size:14px}}
+.team{display:flex;flex-direction:column}
+.tables h2 span{font-size:13px;font-weight:400;color:var(--mut);margin-left:4px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,185px),1fr));gap:12px;align-items:start}
+.pc{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-top:3px solid var(--tc);border-radius:12px;overflow:hidden}
+.pc header{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:var(--row);border-bottom:1px solid var(--line)}
+.pc header b{font-size:15px}
+.pc header span{font-size:12px;font-weight:700;color:var(--tc);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.pc ul{list-style:none;margin:0;padding:0}
+.pc li{display:flex;justify-content:space-between;align-items:center;gap:8px;height:36px;box-sizing:border-box;padding:0 12px;border-bottom:1px solid var(--line);font-size:12.5px}
+.pc li:last-child{border-bottom:0}
+.pc .sn{letter-spacing:-.03em;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .sn.none{font-weight:400;color:var(--mut);font-size:12px}
+.pc .sd{font-variant-numeric:tabular-nums;color:var(--mut);white-space:nowrap}
+.pc .sd:not(.na){color:#0a5f5a;background:#d6efec;font-weight:700;font-size:12px;padding:1px 5px;margin-right:-4px;border-radius:5px}
+.pc .sd.na{opacity:.45}
+.pc .none{padding:14px;color:var(--mut);font-size:12px}
+.empty{padding:32px;text-align:center;color:var(--mut)}
+
+/* ── 비주얼 다듬기 ── */
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;background-color:var(--bg);
+ background-image:radial-gradient(720px 360px at 12% -60px,rgba(238,125,125,.20),transparent 70%),radial-gradient(720px 360px at 88% -60px,rgba(121,163,242,.20),transparent 70%);
+ background-repeat:no-repeat}
+.page{gap:22px}
+.top{align-items:flex-end;padding-top:8px}
+.eyebrow{font-size:11px;letter-spacing:.28em;color:var(--mut);font-weight:700}
+h1{font-size:38px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin:4px 0 0;color:#fff}
+.upd{font-size:11.5px;color:var(--mut);border:1px solid #2b2d30;border-radius:999px;padding:5px 12px;background:rgba(255,255,255,.04)}
+.ppl{gap:8px}
+.ppl button{padding:7px 15px;font-weight:500;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 6px 14px -8px rgba(0,0,0,.8);transition:transform .15s,box-shadow .15s}
+.ppl button:hover{transform:translateY(-1px)}
+.ppl button[aria-pressed=true]{box-shadow:0 8px 18px -8px rgba(107,112,120,.9)}
+.tables{gap:22px}
+.tables h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:21px;font-weight:900;letter-spacing:-.02em}
+.tables h2 .dot{width:11px;height:11px;border-radius:50%;background:var(--tc,#777);box-shadow:0 0 0 4px color-mix(in srgb,var(--tc,#777) 28%,transparent),0 0 18px var(--tc,#777)}
+.tables h2 span{font-weight:500;font-size:13px;margin-left:0}
+.pgrid{gap:14px}
+.pc{border:0;border-radius:10px;box-shadow:0 14px 30px -18px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06);transition:transform .18s,box-shadow .18s;position:relative}
+.pc::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--tc)}
+.pc:hover{transform:translateY(-3px);box-shadow:0 22px 36px -18px rgba(0,0,0,.95),0 0 0 1px color-mix(in srgb,var(--tc) 45%,transparent)}
+.pc header{padding:15px 14px 11px;gap:9px;justify-content:flex-start;background:var(--surface);border-bottom:1px solid var(--line)}
+.pc header b{font-size:16px;font-weight:900;letter-spacing:-.01em}
+.pc header span{margin-left:auto}
+.av{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--tc);color:#fff;font-style:normal;font-weight:900;font-size:14px;box-shadow:0 4px 10px -4px var(--tc)}
+.pc li[data-k]:hover{background:color-mix(in srgb,var(--tc) 9%,#fff)}
+.wrap{border:0;border-radius:10px;box-shadow:0 14px 30px -18px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06)}
+thead th{background:linear-gradient(180deg,#f7f9fa,#e9eef1)!important;color:#44525e;letter-spacing:.02em}
+tbody tr[data-k]:hover td{background:#eaf4f3}
+.dlg{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.dlgp{box-shadow:0 30px 80px -20px rgba(0,0,0,.9)}
+.dlgp h3{font-weight:900;font-size:25px;letter-spacing:-.02em}
+@media(min-width:1000px){.pgrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:640px){h1{font-size:30px}.upd{font-size:11px}.tables h2{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.pc,.ppl button{transition:none}.pc:hover,.ppl button:hover{transform:none}}
+
+/* ── 상세 화면 ── */
+.dlgp{display:flex;flex-direction:column;padding:0;overflow:hidden;background:#eef1f4;max-height:min(92vh,760px)}
+.dscroll{flex:1;overflow:auto;padding:0 16px 8px;-webkit-overflow-scrolling:touch}
+.dh{margin:0 -16px;padding:34px 22px 22px;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 22%,#fff),#eef1f4);border-top:5px solid var(--tc)}
+.dcap{font-size:12px;font-weight:700;letter-spacing:.08em;color:color-mix(in srgb,var(--tc) 70%,#14202b);margin-bottom:6px}
+.dlgp h3{margin:0 40px 10px 0;font-size:29px;font-weight:900;letter-spacing:-.03em;line-height:1.2}
+.dk{margin:0}
+.dk .ts i{font-size:15px;padding:3px 12px}
+.steps{list-style:none;margin:2px 0 14px;padding:16px 6px 14px;display:flex;background:#fff;border-radius:10px;box-shadow:0 6px 16px -12px rgba(20,32,43,.5)}
+.steps li{flex:1;min-width:0;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;gap:3px}
+.steps li+li::before{content:"";position:absolute;top:13px;right:50%;width:100%;height:2px;background:var(--line)}
+.steps li.done::before{background:var(--tc)}
+.steps i{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:900;border:2px solid #cfd6dc;background:#fff;color:#fff}
+.steps .done i{background:var(--tc);border-color:var(--tc)}
+.steps .bad i{border-color:#c62828;background:#fde4e2;color:#c62828}
+.steps b{font-size:12px;font-weight:700;margin-top:4px;white-space:nowrap;letter-spacing:-.04em}
+@media(max-width:640px){.steps b{font-size:11px!important}.steps em{font-size:11px}}
+.steps em{font-style:normal;font-size:11.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.steps .bad em{color:#c62828;font-weight:700}
+.dc{background:#fff;border-radius:10px;padding:14px 16px 4px;margin-bottom:12px;box-shadow:0 6px 16px -12px rgba(20,32,43,.5)}
+.dc h4{margin:0 0 2px;font-size:12px;letter-spacing:.12em;color:var(--mut);font-weight:700}
+.dc dl{margin:0}
+.dl .r,.dc .r{display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;padding:13px 0;border-top:1px solid var(--line)}
+.dc .r:first-child{border-top:0}
+.dc dt{margin:0;color:var(--mut);font-size:13.5px}
+.dc dd{margin:0;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;display:flex;align-items:center;gap:10px}
+.dc .r.long{grid-template-columns:1fr;gap:6px;align-items:start}
+.dc .r.long dd{font-size:14px;font-weight:500;line-height:1.5;display:block}
+.cp{margin-left:auto;border:1px solid var(--line);background:#f4f6f8;color:var(--fg);border-radius:999px;font:inherit;font-size:12px;font-weight:700;padding:4px 12px;cursor:pointer}
+.dfoot{padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:#eef1f4}
+#dclose{width:100%;border:0;border-radius:14px;padding:15px;font:inherit;font-size:16px;font-weight:700;background:#1b1e22;color:#fff;cursor:pointer}
+.dx{z-index:3;background:rgba(255,255,255,.85)}
+@keyframes sheetup{from{transform:translateY(36px)}to{transform:none}}
+.dlg:not([hidden]) .dlgp{animation:sheetup .22s ease-out}
+@media(max-width:640px){.dlgp{max-height:none;height:100%;max-width:none;border-radius:0;display:flex;flex-direction:column}.dh{padding-top:44px}.dc dd{font-size:19px}.dlgp h3{font-size:30px}.steps{padding-inline:2px}.steps b{font-size:12.5px}}
+@media(prefers-reduced-motion:reduce){.dlg:not([hidden]) .dlgp{animation:none}}
+
+@media(max-width:640px){
+ .dh{padding:38px 22px 14px}.dlgp h3{font-size:28px;margin-bottom:8px}
+ .steps{margin:0 0 10px;padding:12px 2px 10px}
+ .dc{padding:11px 16px 2px;margin-bottom:10px}
+ .dc .r{padding:9px 0}.dc dd{font-size:18px}
+ .dfoot{padding-top:8px}#dclose{padding:13px}
+}
+.team+.team{margin-top:-2px}
+.tables section:not(.team) h2{margin-bottom:6px}
+.tl{display:flex;align-items:baseline;gap:6px 18px;flex-wrap:wrap}
+.hl{display:flex;flex-wrap:wrap;gap:6px 0;font-size:15.5px;color:#c4c8cd}
+.hl span{padding:0 12px;border-left:1px solid #3a3d42;white-space:nowrap}
+.hl span:first-child{padding-left:0;border-left:0;color:#fff;font-weight:700}
+@media(max-width:640px){.hl{font-size:14px;flex-direction:column;gap:2px}.hl span{padding:0;border-left:0}}
+.meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.adm{font-size:11.5px;color:var(--mut);padding:0 13px;font-variant-numeric:tabular-nums}
+@media(max-width:640px){.top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 8px}.ttl,.tl{display:contents}.top h1{grid-area:1/1}.meta{grid-area:1/2;align-items:flex-end;gap:4px}.hl{grid-area:2/1/3/3}.adm{padding:0 13px;font-size:11px}}
+
+@media(max-width:640px){
+ .dh{padding:clamp(24px,5vh,52px) 22px clamp(8px,2vh,22px)}
+ .dlgp h3{font-size:clamp(22px,3.5vh,29px);margin-bottom:clamp(5px,1.3vh,14px)}
+ .steps{padding:clamp(8px,1.6vh,16px) 2px clamp(7px,1.4vh,14px);margin:0 0 clamp(7px,1.6vh,16px)}
+ .dc{padding:clamp(4px,1vh,12px) 16px 0;margin-bottom:clamp(6px,1.4vh,14px)}
+ .dc .r{padding:clamp(4px,1.15vh,13px) 0}
+ .dc dd{font-size:clamp(15px,2.2vh,19px)}
+ .dfoot{padding-top:clamp(6px,1.2vh,14px)}#dclose{padding:clamp(9px,1.6vh,15px)}
+}
+</style>
+<div class="page">
+  <div class="top"><div class="ttl"><div class="tl"><h1>오픈현황</h1><div class="hl" id="hl"></div></div></div><div class="meta"><div class="upd" id="upd"></div><div class="adm">관리자 : 이민철 주임</div></div></div>
+  <div class="ppl" id="ppl" role="group" aria-label="담당자"></div>
+  <div class="tables" id="tables"></div>
+  <div class="dlg" id="dlg" hidden><div class="dlgp" role="dialog" aria-modal="true" aria-labelledby="dtitle"><button class="dx" id="dx" type="button" aria-label="닫기">✕</button><div id="dbody" class="dscroll"></div><div class="dfoot"><button type="button" id="dclose">닫기</button></div></div></div></div>
+</div>
+<script>
+const D={"updated":"2026-10-14 17:04","headline":"운영(479), 휴점(13), 오픈대기(31) = 합(523) / 10월 계약(11), 오픈(6)","sheets":[{"name":"오픈대기","title":"오픈대기 현황","note":"","columns":["담당자","가맹점명","오픈예정일","교육일자","가계약","본계약","정보공개서","계약자명","입금일","구분","No.","진행상황","기존상호","평수"],"rows":[["오영훈","울산덕하점","2026-10-01","2026-09-21","2026-09-17","계약서미작성","2026-09-17","송*진",null,"업변","본계약","오픈서류 완료 / 교육 완료 / 간판 자체 / 사모님 명의 / (2026.09.29)","해물창고",30],["지승환","안성죽산점","2026-10-19","2026-09-28","2026-08-03","계약서미작성","2026-09-22","심*라","2026-08-20","신규",1,"오픈서류 완료 / 교육 완료 / 초도물류 발주 완료 / 포스기기 설치 예정 / 간판 설치 완료 / (2026.10.13)",null,null],["홍주완","동탄능동점","2026-10-20","2026-08-31","2026-05-23","2026-10-13","2026-08-31","김*주","2026-09-02","법인",2,"오픈서류 완료 / 교육 완료 / 간판 자체 / SPC 코드 신청 완료 / 테이블오더 14일 설치예정 / (2026.10.13)","마시조은푸드",null],["박정섭","인천만의골점","2026-10-20","2026-10-12","2026-09-15","2026-09-30","2026-09-09","오*원",null,"업변",3,"오픈서류 미완 / 교육 완료 / 뉴켄견적 완료 / 오픈일자 협의 중 / 포스 프로그램 설치 / (2026.10.13)","만의골평양옥",38],["지승환","물의정원점","2026-10-22","2026-10-12","2026-10-01","2026-10-13","2026-09-16","정*인",null,"업변",4,"오픈서류 완료 / 교육 완료 / 주방기물 입고 완료 / 간판, 포스기 설치 예정 / (2026.10.13)","75닭갈비",30],["김준","갈산점","2026-10-23","2026-10-12","2026-10-07","계약서미작성","2026-10-08","곽*정",null,"업변",5,"오픈서류 완료 / 교육 완료 / 간판 현지업체 / 포스 신규 설치 / 금주 방문미팅 예정 / (2026.10.13)","고흥장어미가",29],["김준","춘천운교점","2026-10-27","2026-10-12","2026-10-09","계약서미작성","2026-10-08","김*복",null,"업변",6,"오픈서류 미완 / 교육 완료 / 간판 현지업체 / 의탁자 자체 시공 / 포스 신규 설치 / (2026.10.13)","돈먹고가",30],["이영현","종로풍림스페이스점","2026-10-28",null,"2026-10-06","계약서미작성","2026-10-08","이*진",null,"업변",7,"오픈서류 미완 / 교육일정 19~20일 / 뉴켄 간판 실측 완료 / 주방 동선 및 청소 안내 / (2026.10.13)","전주비빔밥",null],["지승환","평촌호계점","2026-10-30",null,"2026-07-20","2026-09-16","2026-06-16","이*용","2026-10-02","업변",8,"오픈서류 완료 / 교육 미정 / 자체 매장분리 완료 / 뉴켄 간판 실측완료 / 주방설비 구매 / (2026.10.13)","메인푸드",null],["김준","여주아울렛점","2026-11-03","2026-10-12","2026-10-09","계약서미작성","2026-10-08","임*근",null,"업변",9,"오픈서류 미완 / 교육 완료 / 간판 본사업체 / 포스 프로그램 설치 / 10월 방문미팅 예정 / (2026.10.13)","임서방 능이백숙",40],["지승환","평택송북점","2026-11-03",null,"2026-10-13","계약서미작성","2026-10-12","황*훈",null,"업변",10,"오픈서류 미완 / 교육일정 19~20일 / 빠른 오픈 희망 / 테이블오더 구매 / 포스 프로그램 설치 / (2026.10.13)","참돼지",37],["이영현","제주도두점",null,"2026-02-09","2026-02-01","2026-02-10","2026-01-26","김*희","2026-02-19","업변",11,"오픈서류 미완 / 교육 완료 / 사업자 허가가 안나서 시청과 계속 협의 중 / 허가 안될 경우 건물주 명의로 사업자 발급 / (2026.10.13)","이만석군 횟집",null],["박정섭","석남역점",null,"면제","2026-07-07","계약서미작성","2026-07-07","김*식",null,"업변",12,"오픈서류 미완 / 교육 면제 / 인천신현점 2호점 / 석남상권 분석 후 상가계약 진행 예정 / (2026.10.13)",null,null],["지승환","이천부발점",null,"2026-08-24","2026-07-21","계약서미작성","2026-07-16","신*정",null,"신규",13,"오픈서류 미완 / 교육 완료 / 정화조 용량 초과로 증축 공사 필요하여 12월까지 공사 예정 / 간판 시공 완료 / (2026.10.13)",null,null],["홍주완","남해스포츠파크점",null,"2026-10-12","2026-09-18","계약서미작성","2026-09-11","임*금",null,"신규",14,"오픈서류 미완 / 교육 완료 / 3일부터 자체 공사 중 / 11월 초~중순 완공예정 / 간판 자체로 금주부터 설치 예정 / (2026.10.13)","GS25",30],["김동혁","서산법원점",null,null,"2026-03-05","2026-05-07","2026-04-21","윤*준",null,"업변",15,"오픈서류 미완 / 교육 미정 / 울산달빛로점 동일점주 / 실운영자 조카 / 주방집기, 간판 본사업체 및 대출 / (2026.10.13)",null,null],["김동혁","영광법성포점",null,null,"2026-04-15","계약서미작성","2026-04-07","이*태",null,"신규",16,"오픈서류 미완 / 교육 미정 / 간판 제외 올자체 / 점주님 건강악화로 입원하여 추후 소통예정 / (2026.10.13)",null,null],["오영훈","수원매교점",null,null,"2026-05-28","계약서미작성","2026-05-27","이*옥",null,"업변",17,"오픈서류 미완 / 교육 미정 / 고기집 병행 / 간판자체 / 계속 매장 바쁘다며 업변 미루는 중 / (2026.10.13)","매교식당",null],["김동혁","만리포해수욕장점",null,null,"2026-06-17","계약서미작성","2026-06-18","김*석",null,"업변",18,"오픈서류 미완 / 교육 미정 / 아내분 퇴사 연기로 파기 희망 / 위약금 50만원 소통 진행 중 / (2026.10.13)","진달래먹고 물장구치고",null],["박정섭","광주서구점_점포개발",null,null,"2026-06-17","계약서미작성","2026-04-17","김*숙",null,"업변",19,"점포 서칭 필요 / 기존업장 인수 후 업변 희망 / (2026.06.17)",null,null],["이병철","대전정림점",null,null,"2026-07-14","계약서미작성","2026-07-14","이*례",null,"업변",20,"오픈서류 미완 / 교육 미정 / 점주 병원 입원하여 현장미팅 일정 조율 중 / (2026.10.13)","에브리카페",null],["이병철","대전봉산점",null,null,"2026-07-22","계약서미작성","2026-07-22","공*란",null,"업변",21,"오픈서류 미완 / 교육 미정 / 현재 연락두절 / (2026.10.13)","세종식당",null],["박은진","송도역점",null,null,"2026-08-05","계약서미작성","2026-07-31","신*훈",null,"업변",22,"오픈서류 미완 / 교육 미정 / 와이프 수술로 오픈 딜레이 / 계약파기 예상 / (2026.10.08)","제주돈가",null],["김준","화도마석점",null,null,"2026-09-03","2026-09-09","2026-07-09","이*리",null,"업변",23,"오픈서류 미완 / 교육 미정 / 점주님 개인사정으로 인해 딜레이 / 추후 일정조율 예정 / (2026.10.13)","속초 코다리밥상",null],["지승환","김해진영점",null,null,"2026-09-08","계약서미작성","2026-08-19","최*석",null,"업변",24,"오픈서류 미완 / 교육 미정 / 현재 연락두절로 계약파기 의심 / (2026.10.13)","대패천하",150],["이병철","성산동점",null,null,"2026-09-30","계약서미작성","2026-09-28","김*정",null,"업변",25,"오픈서류 미완 / 교육 미정 / 주방기물, 의탁자 금액 부담으로 계약 파기 요청 회신 / (2026.10.13)","싸움의고수",16],["박은진","응암오거리점",null,null,"2026-09-30","계약서미작성","2026-10-01","주*현",null,"업변",26,"기존 국수집 인수 후 업변예정 / 임대 계약전 현장 미팅 / 금주내 부동산 계약 예정 / (2026.09.30)","소표국수",21],["이병철","여수돌산대교점",null,null,"2026-10-01","계약서미작성","2026-09-28","곽*채",null,"업변",27,"오픈서류 미완 / 교육 미정 / 10월 말까지 기존 돈까스 영업 후 업변예정 / 간판 현지업체 견적서 전달 완료 / (2026.10.13)","바삭하게",120],["홍주완","거제고현점",null,null,"2026-10-02","계약서미작성","2026-09-09","김*영",null,"업변",28,"오픈서류 미완 / 교육일정 19~20일 / 가게 인수 완료 / 주류대출 캔슬되어 오픈 연기 희망 / (2026.10.13)","금화쌈밥",21],["오영훈","울산전하점",null,null,"2026-10-03","계약서미작성","2026-09-28","권*숙",null,"업변",29,"오픈서류 미완 / 교육 미정 / 간판 실측 방문했으나 오픈지연으로 실측비 청구 / 위암 재발하여 입원으로 딜레이 / (2026.10.13)","GOGO",250],["박은진","신대방삼거리역점",null,null,"2026-10-07","계약서미작성","2026-10-08","이*길",null,"업변",30,"오픈서류 미완 / 교육 미정 / 기업주방 금주 금요일 미팅 예정 / 뉴켄 실측 완료 / 포스 설치예정 / (2026.10.13)","역전우동",21],["홍주완","통영산양점",null,null,"2026-10-13","계약서미작성","2026-10-08","강*호",null,"업변",31,"자가건물로 숯불고기 운영 중 / 매출저조로 함바집으로 변경 후 일품으로 업변 / 간판 현지업체 / (2026.10.13)","일품한우 식육식당",50]]},{"name":"오픈지연","title":"오픈지연 현황","note":"","columns":["담당자","가맹점명","오픈예정일","교육일자","가계약","본계약","정보공개서","계약자명","입금일","구분","No.","진행상황","기존상호","평수"],"rows":[["지승환","도농사거리점","2026-08-12",null,null,"계약서미작성","2026-09-04","임*복",null,"양수/법인","본계약","양도양수 예정 / (2026.08.06)",null,null],["김준","단계터미널점","2026-09-01",null,null,"계약서미작성","2026-09-02","최*구",null,"양수","본계약","양도양수 예정 / (2026.09.02)",null,null],["박은진","인천용현점",null,"2026-09-28","2026-07-07","계약서미작성","2026-07-07","장*욱",null,"명변/이전",1,"기존 인천용현점 폐점으로 위약금 대신 지인분 명변 후 이전하여 연장 운영 예정 / 현재 보리밥 운영 중으로 삽인샵 진행 / (2026.07.07)",null,null],["박은진","불광역점",null,null,null,"계약서미작성","2026-08-27","윤*현",null,"명변/이전",2,"구산역점 매장이전 및 명의변경하면서 불광역점으로 매장명 변경예정 / (2026.08.27)",null,null],["김동혁","함평대동점",null,null,null,"계약서미작성","2026-08-28","이*주",null,"양수",3,"양도양수 예정 / (2026.08.28)",null,null],["지승환","경북청송점",null,null,null,"계약서미작성","2026-10-08","김*리",null,"명변",4,"명의변경 예정 / (2026.10.08)",null,null],["김동혁","부여굿뜨래점",null,null,null,"계약서미작성","2026-10-13",null,null,"양수",5,"양도양수 예정 / (2026.10.13)",null,null],["오영훈","울산간절곶점",null,null,null,"계약서미작성","2026-10-13","지*길",null,"명변",6,"명의변경 예정 / (2026.10.130",null,null]]}]};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const fmt=v=>v==null?"":typeof v==="number"?v.toLocaleString("ko-KR"):String(v);
+$("upd").textContent="데이터 기준 "+D.updated;
+$("hl").innerHTML=(D.headline||"").split(/\s*\/\s*/).filter(x=>x&&!/제외/.test(x)).map(x=>`<span>${esc(x)}</span>`).join("");
+const mi=s=>s.columns.indexOf("담당자");
+let person="*";
+const SKIP=new Set(["담당자","가맹점명","구분","No.","진행상황"]);
+const dt=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)?v.replace(/-/g,"."):v;
+function setup(){
+  // 버튼은 모든 담당자를 보여주고, 옆의 숫자는 "오픈대기" 표에 있는 건수만 센다
+  const cnt=new Map();let total=0;
+  D.sheets.forEach(s=>{const m=mi(s);s.rows.forEach(r=>{const k=(m>=0&&r[m])||"미지정";if(!cnt.has(k))cnt.set(k,0)})});
+  const w=D.sheets[0],wm=mi(w),wn=w.columns.indexOf("No.");
+  w.rows.forEach(r=>{if(r[wn]==="본계약")return;const k=(wm>=0&&r[wm])||"미지정";cnt.set(k,cnt.get(k)+1);total++});
+  const ORD=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","박정섭","김동혁"];
+  const rank=k=>{const i=ORD.indexOf(k);return i<0?(k==="미지정"?999:100):i};   // 정해 둔 순서, 목록에 없는 담당자는 그 뒤
+  const names=[...cnt].sort((a,b)=>rank(a[0])-rank(b[0])||a[0].localeCompare(b[0],"ko"));
+  $("ppl").innerHTML=[["*","전체",total],["","요약",total],...names.map(([k,n])=>[k,k,n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===person}">${esc(l)} <span>${n}</span></button>`).join("");
+  render();
+}
+$("ppl").onclick=e=>{const b=e.target.closest("button");if(!b)return;person=b.dataset.p;[...$("ppl").children].forEach(x=>x.setAttribute("aria-pressed",x===b));render()};
+const ORDER=["가맹점명","구분","오픈예정일","교육일자","가계약","본계약","정보공개서","계약자명","연락처","입금일"];
+const dt2=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)?v.slice(2).replace(/-/g,"."):v;
+function cols(s){const c=ORDER.filter(x=>s.columns.includes(x));const ex=person==="*"?EXTRA.filter(x=>s.columns.includes(x)):[];if(person==="*"&&s.columns.includes("담당자")){const k=c.indexOf("가맹점명")+1;return[...c.slice(0,k),"담당자",...c.slice(k),...ex]}
+  return person===""&&s.columns.includes("담당자")?["담당자",...c]:[...c,...ex]}
+const EXTRA=["진행상황","기존상호","보증금","월세","평수","매출액"];
+function row(r,s,cs){
+  return`<tr data-k="${reg(r,s)}">`+cs.map(c=>{const v=r[s.columns.indexOf(c)];
+    if(c==="입금일"&&(v==null||/미입금/.test(v)))return`<td><span class="bad">미입금</span></td>`;
+    if(v==null)return`<td><span class="na">-</span></td>`;
+    if(c==="진행상황")return`<td class="pr" title="${esc(String(v))}">${esc(String(v))}</td>`;
+    if(c==="가맹점명")return`<td class="nm">${esc(String(v).replace(/_.*$/,""))}</td>`;
+    if(c==="구분"){const K={"신규":"c-new","업변":"c-chg","법인":"c-corp","양수":"c-yang","이전":"c-jeon","명변":"c-myeong"};return`<td><span class="ts">${String(v).split("/").map(x=>`<i class="${K[x.trim()]||"c-x"}">${esc(x.trim())}</i>`).join("")}</span></td>`}
+    if(c==="본계약"&&/미작성/.test(v))return`<td><span class="bad">미작성</span></td>`;
+    if(typeof v==="number")return`<td class="n">${fmt(v)}</td>`;
+    return`<td>${esc(dt2(v))}</td>`}).join("")+"</tr>";
+}
+const cmp=(x,y)=>x<y?-1:x>y?1:0;
+function sorted(s){
+  const m=mi(s);
+  let rows=s.rows.filter(r=>person===""||person==="*"||((r[m]||"미지정")===person));
+  const oi=s.columns.indexOf("오픈예정일"),gi=s.columns.indexOf("가계약"),ei=s.columns.indexOf("교육일자");
+  const open=r=>(oi>=0&&r[oi])||"",edu=r=>ei>=0&&r[ei]?0:1,gye=r=>(gi>=0&&r[gi])||"9999";
+  // 1순위 오픈예정일(있는 건 먼저, 빠른 날짜 순) → 오픈예정일 없으면 교육일자 있는 건 먼저 → 가계약일 순
+  return [...rows].sort((a,b)=>(open(a)?0:1)-(open(b)?0:1)||cmp(open(a),open(b))||edu(a)-edu(b)||cmp(gye(a),gye(b)));
+}
+const TEAMS=[["1팀",["이영현","홍주완","오영훈","지승환","김준"],"#ee7d7d"],["2팀",["박은진","이병철","박정섭","김동혁"],"#79a3f2"]];
+function summaryHTML(p){
+  const s=p.s,m=s.columns.indexOf("담당자"),ni=s.columns.indexOf("가맹점명"),oi=s.columns.indexOf("오픈예정일");
+  const by=new Map();p.rows.forEach(r=>{const k=r[m]||"미지정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
+  const ROWS=7;   // 모든 담당자 카드를 7줄로 통일 (부족하면 빈 줄로 채움)
+  const card=(name,rows)=>{
+    const li=rows.map(r=>`<li data-k="${reg(r,s)}"><span class="sn" title="${esc(String(r[ni]).replace(/_.*$/,""))}">${esc(String(r[ni]).replace(/_.*$/,""))}</span><span class="sd${r[oi]?"":" na"}">${r[oi]?dt2(r[oi]):"미정"}</span></li>`);
+    for(let k=rows.length;k<ROWS;k++)li.push(`<li class="blank"><span class="sn none">${rows.length===0&&k===0?"배정된 매장 없음":"&nbsp;"}</span></li>`);
+    return `<article class="pc"><header><b>${esc(name)}</b><span>${rows.length}건</span></header><ul>${li.join("")}</ul></article>`;
+  };
+  const used=new Set(),secs=TEAMS.map(([title,names,color])=>{
+    names.forEach(n=>used.add(n));
+    const n=names.reduce((a,x)=>a+(by.get(x)||[]).length,0);
+    return `<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <span>${n}건</span></h2><div class="pgrid">${names.map(x=>card(x,by.get(x)||[])).join("")}</div></section>`});
+  const rest=[...by.keys()].filter(k=>!used.has(k));
+  if(rest.length)secs.push(`<section class="team" style="--tc:#777"><h2><i class="dot"></i>기타 <span>${rest.reduce((a,x)=>a+by.get(x).length,0)}건</span></h2><div class="pgrid">${rest.map(x=>card(x,by.get(x))).join("")}</div></section>`);
+  return secs.join("");
+}
+const REG=[];
+const reg=(r,s)=>REG.push([r,s])-1;
+const KM={"신규":"c-new","업변":"c-chg","법인":"c-corp","양수":"c-yang","이전":"c-jeon","명변":"c-myeong"};
+const kindHTML=v=>`<span class="ts">${String(v).split("/").map(x=>`<i class="${KM[x.trim()]||"c-x"}">${esc(x.trim())}</i>`).join("")}</span>`;
+function showDetail(r,s){
+  const g=n=>{const i=s.columns.indexOf(n);return i<0?null:r[i]};
+  const name=String(g("가맹점명")||"").replace(/_.*$/,"");
+  const mgr=g("담당자")||"";
+  const team=TEAMS.find(x=>x[1].includes(mgr));
+  const tc=team?team[2]:"#8a9099";
+  const isD=v=>typeof v==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(v);
+  const short=v=>isD(v)?v.slice(5).replace("-","."):v;
+  // 진행 단계
+  const st=(label,v,mode)=>{
+    if(mode==="deposit"){}
+    if(label==="본계약"&&v!=null&&/미작성/.test(v))return{c:"bad",i:"!",l:label,d:"미작성"};
+    if(v==null)return{c:"todo",i:"",l:label,d:"-"};
+    return{c:"done",i:"✓",l:label,d:short(v)};
+  };
+  const today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);   // 한국 날짜 기준
+  const dep=g("입금일"),opn=g("오픈예정일");
+  const sOpen=opn==null?{c:"todo",i:"",l:"오픈",d:"-"}:(isD(opn)&&opn<today?{c:"done",i:"✓",l:"오픈",d:short(opn)}:{c:"todo",i:"",l:"오픈",d:short(opn)});   // 오픈일이 지나야 체크
+  const sPay=(dep==null||/미입금/.test(dep))?{c:"bad",i:"!",l:"계약금",d:"미입금"}:{c:"done",i:"✓",l:"계약금",d:short(dep)};
+  const steps=[st("가계약",g("가계약")),st("정보공개서",g("정보공개서")),st("본계약",g("본계약")),sPay,st("교육",g("교육일자")),sOpen];
+  const val=(f,v)=>{
+    if(f==="입금일"&&(v==null||/미입금/.test(v)))return`<span class="bad">미입금</span>`;
+    if(f==="본계약"&&v!=null&&/미작성/.test(v))return`<span class="bad">미작성</span>`;
+    if(v==null)return`<span class="na">-</span>`;
+    return esc(typeof v==="number"?fmt(v):dt(v));
+  };
+  const row=f=>s.columns.includes(f)?`<div class="r"><dt>${f==="입금일"?"계약금":f}</dt><dd>${val(f,g(f))}${f==="연락처"&&g(f)?`<button type="button" class="cp" data-t="${esc(g(f))}">복사</button>`:""}</dd></div>`:"";
+  const sec=(title,fs)=>`<section class="dc">${title?`<h4>${title}</h4>`:""}<dl>${fs.map(row).join("")}</dl></section>`;
+  const secX=fs=>`<section class="dc dx2"><dl>${fs.filter(f=>s.columns.includes(f)).map(f=>`<div class="r${f==="진행상황"?" long":""}"><dt>${f}</dt><dd>${val(f,g(f))}</dd></div>`).join("")}</dl></section>`;
+  $("dbody").innerHTML=`<div class="dh" style="--tc:${tc}"><h3 id="dtitle">${esc(name)}</h3>${g("구분")?`<div class="dk">${kindHTML(g("구분"))}</div>`:""}</div>
+  <ol class="steps" style="--tc:${tc}">${steps.map(x=>`<li class="${x.c}"><i>${x.i}</i><b>${x.l}</b><em>${esc(x.d)}</em></li>`).join("")}</ol>
+  ${sec("",["가계약","정보공개서","본계약","입금일","교육일자","오픈예정일","계약자명","연락처"])}${person==="*"?secX(["담당자","기존상호","보증금","월세","평수","매출액","진행상황"]):""}`;
+  $("dlg").hidden=false;$("dbody").scrollTop=0;$("dclose").focus();
+}
+$("dbody").addEventListener("click",e=>{const b=e.target.closest(".cp");if(!b)return;
+  const done=()=>{b.textContent="복사됨";setTimeout(()=>{b.textContent="복사"},1400)};
+  try{navigator.clipboard.writeText(b.dataset.t).then(done,()=>{})}catch(_){}
+});
+const closeDetail=()=>{$("dlg").hidden=true};
+$("tables").addEventListener("click",e=>{const el=e.target.closest("[data-k]");if(!el)return;const x=REG[+el.dataset.k];if(x)showDetail(x[0],x[1])});
+$("dx").onclick=closeDetail;$("dclose").onclick=closeDetail;
+$("dlg").addEventListener("click",e=>{if(e.target===$("dlg"))closeDetail()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail()});
+const FILT={};   // 전체 탭 열 필터: {열이름: 허용값 Set}
+const fval=(r,s,c)=>{const i=s.columns.indexOf(c);let v=i<0?null:r[i];
+  if(c==="입금일"&&(v==null||/미입금/.test(v)))return"미입금";
+  if(v==null||v==="")return"(빈값)";
+  if(c==="가맹점명")return String(v).replace(/_.*$/,"");
+  return typeof v==="number"?String(fmt(v)):String(dt2(v))};
+const passF=(r,s)=>Object.keys(FILT).every(c=>!FILT[c]||FILT[c].has(fval(r,s,c)));
+const fpop=document.createElement("div");fpop.id="fpop";fpop.hidden=true;document.body.appendChild(fpop);
+const keepScroll=fn=>{const w=document.querySelector(".wall"),a=w?[w.scrollLeft,w.scrollTop]:null;fn();const n=document.querySelector(".wall");if(n&&a){n.scrollLeft=a[0];n.scrollTop=a[1]}};
+function openFilter(th,c){
+  const cnt=new Map();D.sheets.forEach(s=>s.rows.forEach(r=>{const v=fval(r,s,c);cnt.set(v,(cnt.get(v)||0)+1)}));
+  const vals=[...cnt.keys()].sort((a,b)=>a==="(빈값)"?1:b==="(빈값)"?-1:a.localeCompare(b,"ko",{numeric:true}));
+  const sel=FILT[c]?new Set(FILT[c]):new Set(vals);
+  fpop.innerHTML=`<input type="search" placeholder="검색" aria-label="검색"><div class="fl">${vals.map(v=>`<label><input type="checkbox" value="${esc(v)}"${sel.has(v)?" checked":""}><span>${esc(v)}</span><em>${cnt.get(v)}</em></label>`).join("")}</div><div class="fa"><button type="button" data-a="all">전체 선택</button><button type="button" data-a="none">전체 해제</button><button type="button" data-a="reset">필터 해제</button></div>`;
+  const apply=()=>{const ch=[...fpop.querySelectorAll(".fl input:checked")].map(x=>x.value);
+    FILT[c]=ch.length===vals.length?null:new Set(ch);if(!FILT[c])delete FILT[c];keepScroll(render)};
+  fpop.onchange=apply;
+  fpop.querySelector("input[type=search]").oninput=e=>{const q=e.target.value.trim().toLowerCase();fpop.querySelectorAll(".fl label").forEach(l=>{l.hidden=q&&!l.textContent.toLowerCase().includes(q)})};
+  fpop.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    const vis=[...fpop.querySelectorAll(".fl label:not([hidden]) input")];
+    if(b.dataset.a==="all")vis.forEach(x=>x.checked=true);
+    if(b.dataset.a==="none")vis.forEach(x=>x.checked=false);
+    if(b.dataset.a==="reset"){fpop.querySelectorAll(".fl input").forEach(x=>x.checked=true)}
+    apply()};
+  const rc=th.getBoundingClientRect();fpop.hidden=false;
+  const w=fpop.offsetWidth;fpop.style.left=Math.max(8,Math.min(innerWidth-w-8,rc.left))+"px";fpop.style.top=(rc.bottom+4)+"px";
+  fpop.querySelector("input[type=search]").focus();
+}
+$("tables").addEventListener("click",e=>{const b=e.target.closest(".fb");if(!b)return;e.stopPropagation();
+  const same=!fpop.hidden&&fpop.dataset.c===b.dataset.c;fpop.hidden=true;if(same)return;
+  fpop.dataset.c=b.dataset.c;openFilter(b.closest("th"),b.dataset.c)},true);
+document.addEventListener("click",e=>{if(!fpop.hidden&&!fpop.contains(e.target)&&!e.target.closest(".fb"))fpop.hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")fpop.hidden=true});
+$("ppl").addEventListener("click",()=>{fpop.hidden=true},true);
+function render(){
+  REG.length=0;
+  // 엑셀 No. 칸에 숫자 대신 "본계약"이 적힌 줄(빨간 글씨)은 따로 모아 맨 위 표로 분리
+  const isC=(s,r)=>r[s.columns.indexOf("No.")]==="본계약";
+  const s0=D.sheets[0];
+  const cRows=D.sheets.flatMap(s=>s.rows.filter(r=>isC(s,r)));
+  const parts=[{title:"오픈완료",s:s0,rows:sorted({columns:s0.columns,rows:cRows})},
+    ...D.sheets.map((s,i)=>({title:["오픈대기","명변, 양수, 이전 예정"][i]||s.title,s,rows:sorted({columns:s.columns,rows:s.rows.filter(r=>!isC(s,r))})}))];
+  const total=parts.reduce((n,p)=>n+p.rows.length,0)||1;
+  const sum=person==="";
+  if(sum){$("tables").innerHTML=summaryHTML(parts.find(p=>p.title==="오픈대기"));return}   // 요약: 매장명·담당자·오픈예정일만
+  const cs=sum?["가맹점명","담당자","오픈예정일"]:cols(D.sheets[0]);
+  const W=sum?{"가맹점명":40,"담당자":30,"오픈예정일":30}:{"담당자":6,"가맹점명":17,"구분":9,"오픈예정일":7.5,"교육일자":7.5,"가계약":7.5,"본계약":7.5,"정보공개서":7.5,"계약자명":10,"연락처":13,"입금일":7.5};
+  const PX={"담당자":96,"가맹점명":150,"구분":84,"오픈예정일":108,"교육일자":100,"가계약":90,"본계약":90,"정보공개서":112,"계약자명":100,"연락처":120,"입금일":92,"진행상황":500,"기존상호":130,"보증금":84,"월세":72,"평수":56,"매출액":84};const all=person==="*",tw=all?cs.reduce((n,c)=>n+(PX[c]||80),0):0;
+  const cg="<colgroup>"+cs.map(c=>all?`<col style="width:${PX[c]||80}px">`:`<col style="width:${W[c]||8}%">`).join("")+"</colgroup>";
+  const head=cg+"<thead><tr>"+cs.map(c=>`<th${c==="가맹점명"?' class="nm"':""}>${({"가맹점명":"매장명","입금일":"계약금"})[c]||c}${all?`<b class="fb${FILT[c]?" on":""}" data-c="${c}" title="필터">▾</b>`:""}</th>`).join("")+"</tr></thead>";
+  if(all)parts.forEach(p=>{p.all=p.rows;p.rows=p.rows.filter(r=>passF(r,p.s))});
+  const POS=["오픈대기","오픈완료","명변, 양수, 이전 예정"];parts.sort((x,y)=>POS.indexOf(x.title)-POS.indexOf(y.title));
+  $("tables").innerHTML=total?parts.filter(p=>(p.rows.length||all&&p.title==="오픈대기")&&person!=="").map(p=>`<section><h2>${p.title}</h2><div class="wrap${all?' wall':""}"${sum?' style="max-width:640px"':""}><table${sum?' style="min-width:0"':all?` class="all" style="min-width:${tw}px;width:${tw}px"`:""}>${head}<tbody>${p.rows.map(r=>row(r,p.s,cs)).join("")}</tbody></table></div></section>`).join(""):`<div class="empty">표시할 항목이 없습니다</div>`;
+}
+
+setup();
+</script>
+
+</body></html>
