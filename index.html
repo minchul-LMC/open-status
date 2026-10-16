@@ -102,6 +102,7 @@ td.nm,th.nm{text-align:center}
 .ts i.c-myeong{color:var(--k-myeong);background:var(--k-myeong-bg)}
 .ts i.c-x{color:var(--mut);background:var(--row)}
 .bad{color:var(--bad);font-weight:700}
+.snd{color:#0000b0;font-weight:700}
 .gap td{height:28px;padding:0;background:#000;border:0}
 .na{color:var(--mut)}
 td.pr{text-align:left;padding:3px 8px;font-size:11.5px;white-space:normal;word-break:keep-all;overflow:visible;text-overflow:clip;line-height:1.2}
@@ -193,6 +194,7 @@ tbody tr[data-k]:hover td{background:#eaf4f3}
 @media(max-width:640px){.steps b{font-size:11px!important}.steps em{font-size:11px}}
 .steps em{font-style:normal;font-size:11.5px;color:var(--mut);font-variant-numeric:tabular-nums}
 .steps .bad em{color:#c62828;font-weight:700}
+.steps .snd i{border-color:#0000b0;background:#dfdff2;color:#0000b0}.steps .snd em,.steps .snd b{color:#0000b0;font-weight:700}
 .dc{background:#fff;border-radius:10px;padding:14px 16px 4px;margin-bottom:12px;box-shadow:0 6px 16px -12px rgba(20,32,43,.5)}
 .dc h4{margin:0 0 2px;font-size:12px;letter-spacing:.12em;color:var(--mut);font-weight:700}
 .dc dl{margin:0}
@@ -282,7 +284,7 @@ function row(r,s,cs){
     if(c==="가맹점명")return`<td class="nm">${esc(String(v).replace(/_.*$/,""))}</td>`;
     if(c==="구분"){const K={"신규":"c-new","업변":"c-chg","법인":"c-corp","양수":"c-yang","이전":"c-jeon","명변":"c-myeong"};return`<td><span class="ts">${String(v).split("/").map(x=>`<i class="${K[x.trim()]||"c-x"}">${esc(x.trim())}</i>`).join("")}</span></td>`}
     if(c==="본계약"&&/미작성/.test(v))return`<td><span class="bad">미작성</span></td>`;
-    if(c==="본계약"&&/^\s*미?발송\s*$/.test(v))return`<td><span class="bad">${esc(String(v).trim())}</span></td>`;
+    if(c==="본계약"&&/^\s*미?발송\s*$/.test(v))return`<td><span class="${String(v).trim()==="발송"?"snd":"bad"}">${esc(String(v).trim())}</span></td>`;
     if(typeof v==="number")return`<td class="n">${fmt(v)}</td>`;
     return`<td>${esc(dt2(v))}</td>`}).join("")+"</tr>";
 }
@@ -329,7 +331,7 @@ function showDetail(r,s){
   const st=(label,v,mode)=>{
     if(mode==="deposit"){}
     if(label==="본계약"&&v!=null&&/미작성/.test(v))return{c:"bad",i:"!",l:label,d:"미작성"};
-    if(label==="본계약"&&v!=null&&/^\s*미?발송\s*$/.test(v))return{c:"bad",i:"!",l:label,d:String(v).trim()};
+    if(label==="본계약"&&v!=null&&/^\s*미?발송\s*$/.test(v))return{c:String(v).trim()==="발송"?"snd":"bad",i:"!",l:label,d:String(v).trim()};
     if(v==null)return{c:"todo",i:"",l:label,d:"-"};
     return{c:"done",i:"✓",l:label,d:short(v)};
   };
@@ -341,7 +343,7 @@ function showDetail(r,s){
   const val=(f,v)=>{
     if(f==="입금일"&&(v==null||/미입금/.test(v)))return`<span class="bad">미입금</span>`;
     if(f==="본계약"&&v!=null&&/미작성/.test(v))return`<span class="bad">미작성</span>`;
-    if(f==="본계약"&&v!=null&&/^\s*미?발송\s*$/.test(v))return`<span class="bad">${esc(String(v).trim())}</span>`;
+    if(f==="본계약"&&v!=null&&/^\s*미?발송\s*$/.test(v))return`<span class="${String(v).trim()==="발송"?"snd":"bad"}">${esc(String(v).trim())}</span>`;
     if(v==null)return`<span class="na">-</span>`;
     return esc(typeof v==="number"?fmt(v):dt(v));
   };
