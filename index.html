@@ -279,6 +279,7 @@ const EXTRA=["진행상황","기존상호","보증금","월세","평수","매출
 function row(r,s,cs){
   return`<tr data-k="${reg(r,s)}">`+cs.map(c=>{const v=r[s.columns.indexOf(c)];
     if(c==="입금일"&&(v==null||/미입금/.test(v)))return`<td><span class="bad">미입금</span></td>`;
+    if(c==="오픈예정일"&&/파기/.test(v))return`<td><span class="bad">${esc(String(v).trim())}</span></td>`;
     if(v==null)return`<td><span class="na">-</span></td>`;
     if(c==="진행상황")return`<td class="pr" title="${esc(String(v))}">${esc(String(v))}</td>`;
     if(c==="가맹점명")return`<td class="nm">${esc(String(v).replace(/_.*$/,""))}</td>`;
@@ -293,7 +294,7 @@ function sorted(s){
   const m=mi(s);
   let rows=s.rows.filter(r=>person===""||person==="*"||((r[m]||"미지정")===person));
   const oi=s.columns.indexOf("오픈예정일"),gi=s.columns.indexOf("가계약"),ei=s.columns.indexOf("교육일자");
-  const open=r=>(oi>=0&&r[oi])||"",edu=r=>ei>=0&&r[ei]?0:1,gye=r=>(gi>=0&&r[gi])||"9999";
+  const open=r=>(oi>=0&&r[oi]&&!/파기/.test(r[oi])&&r[oi])||"",edu=r=>ei>=0&&r[ei]?0:1,gye=r=>(gi>=0&&r[gi])||"9999";
   // 1순위 오픈예정일(있는 건 먼저, 빠른 날짜 순) → 오픈예정일 없으면 교육일자 있는 건 먼저 → 가계약일 순
   return [...rows].sort((a,b)=>(open(a)?0:1)-(open(b)?0:1)||cmp(open(a),open(b))||edu(a)-edu(b)||cmp(gye(a),gye(b)));
 }
@@ -337,13 +338,14 @@ function showDetail(r,s){
   };
   const today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);   // 한국 날짜 기준
   const dep=g("입금일"),opn=g("오픈예정일");
-  const sOpen=opn==null?{c:"todo",i:"",l:"오픈",d:"-"}:(isD(opn)&&opn<today?{c:"done",i:"✓",l:"오픈",d:short(opn)}:{c:"todo",i:"",l:"오픈",d:short(opn)});   // 오픈일이 지나야 체크
+  const sOpen=(opn!=null&&/파기/.test(opn))?{c:"bad",i:"!",l:"오픈",d:String(opn).trim()}:opn==null?{c:"todo",i:"",l:"오픈",d:"-"}:(isD(opn)&&opn<today?{c:"done",i:"✓",l:"오픈",d:short(opn)}:{c:"todo",i:"",l:"오픈",d:short(opn)});   // 오픈일이 지나야 체크
   const sPay=(dep==null||/미입금/.test(dep))?{c:"bad",i:"!",l:"계약금",d:"미입금"}:{c:"done",i:"✓",l:"계약금",d:short(dep)};
   const steps=[st("가계약",g("가계약")),st("정보공개서",g("정보공개서")),st("본계약",g("본계약")),sPay,st("교육",g("교육일자")),sOpen];
   const val=(f,v)=>{
     if(f==="입금일"&&(v==null||/미입금/.test(v)))return`<span class="bad">미입금</span>`;
     if(f==="본계약"&&v!=null&&/미작성/.test(v))return`<span class="bad">미작성</span>`;
     if(f==="본계약"&&v!=null&&/^\s*미?발송\s*$/.test(v))return`<span class="${String(v).trim()==="발송"?"snd":"bad"}">${esc(String(v).trim())}</span>`;
+    if(f==="오픈예정일"&&v!=null&&/파기/.test(v))return`<span class="bad">${esc(String(v).trim())}</span>`;
     if(v==null)return`<span class="na">-</span>`;
     return esc(typeof v==="number"?fmt(v):dt(v));
   };
