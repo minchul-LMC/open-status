@@ -105,6 +105,14 @@ td.nm,th.nm{text-align:center}
 .snd{color:#0000b0;font-weight:700}
 .gap td{height:28px;padding:0;background:#000;border:0}
 .na{color:var(--mut)}
+table.roy td,table.roy th{padding-left:4px;padding-right:4px}table.roy th{white-space:nowrap;font-size:11px}
+.pc .sd.amt:not(.na){color:#c62828;background:none;font-weight:700;margin:0;padding:0;font-size:12.5px}.pc li.tot{background:var(--row);font-weight:800}.pc li.tot .sn{font-weight:800}
+body.roy h1{white-space:nowrap}@media(max-width:640px){body.roy h1{font-size:24px}}
+.rtot{display:flex;align-items:baseline;gap:10px;margin:0 0 -14px 2px;color:#c4c8cd;font-size:14px}.rtot>span{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.01em}.rtot b{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.01em}@media(max-width:640px){.rtot{gap:6px;white-space:nowrap}.rtot>span,.rtot b{font-size:17px}.rtot em{font-size:12px}}
+.rtot em{font-style:normal;font-size:13px;color:#9aa4ae}
+table.roy td.mm{font-size:12px;line-height:1.4;white-space:normal;word-break:keep-all;font-variant-numeric:tabular-nums}
+@media(max-width:640px){table.roy{min-width:560px!important}table.roy td.nm,table.roy th.nm{position:sticky;left:0;z-index:1;background:#fff}table.roy tbody tr:nth-child(even) td.nm{background:#eff3f6}table.roy th.nm{z-index:3;background:#eef2f5}}
+.roynote{margin:12px 2px 0;color:#9aa4ae;font-size:12px}
 td.pr{text-align:left;padding:3px 8px;font-size:11.5px;white-space:normal;word-break:keep-all;overflow:visible;text-overflow:clip;line-height:1.2}
 tbody tr[data-k],.pc li[data-k]{cursor:pointer}
 .pc li[data-k]:hover,.pc li[data-k]:active{background:var(--row)}
@@ -173,6 +181,12 @@ tbody tr[data-k]:hover td{background:#eaf4f3}
 .dlgp h3{font-weight:900;font-size:25px;letter-spacing:-.02em}
 @media(min-width:1000px){.pgrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media(max-width:640px){h1{font-size:30px}.upd{font-size:11px}.tables h2{font-size:19px}}
+#scope.ppl{width:fit-content;gap:4px;padding:4px;margin-bottom:-12px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
+#scope.ppl button{padding:8px 24px;border:0;border-radius:10px;background:transparent;color:#c4c8cd;font-size:15px;font-weight:700;box-shadow:none}
+#scope.ppl button:hover{transform:none;color:#fff}
+#scope.ppl button span{color:inherit;opacity:.7;font-size:13px}
+#scope.ppl button[aria-pressed=true]{background:#1a4aa8;color:#fff;box-shadow:0 6px 16px -8px rgba(26,74,168,.9)}
+#scope.ppl button:nth-child(2)[aria-pressed=true]{background:#b32d2d;box-shadow:0 6px 16px -8px rgba(179,45,45,.9)}
 @media(prefers-reduced-motion:reduce){.pc,.ppl button{transition:none}.pc:hover,.ppl button:hover{transform:none}}
 
 /* ── 상세 화면 ── */
@@ -240,9 +254,14 @@ tbody tr[data-k]:hover td{background:#eaf4f3}
  .dc dd{font-size:clamp(15px,2.2vh,19px)}
  .dfoot{padding-top:clamp(6px,1.2vh,14px)}#dclose{padding:clamp(9px,1.6vh,15px)}
 }
+.team h2 em.tt~span{margin-left:0}
+body.roy .tables .team h2{margin-bottom:8px}
+.team h2 em.tt{font-style:normal;margin-left:12px;font-size:17px;font-weight:900;color:#fff}
+@media(max-width:700px){.team h2 em.tt{display:block;margin:4px 0 0 0;font-size:15px}}
 </style>
 <div class="page">
   <div class="top"><div class="ttl"><div class="tl"><h1>오픈현황</h1><div class="hl" id="hl"></div></div></div><div class="meta"><div class="upd" id="upd"></div><div class="adm">관리자 : 이민철 주임</div></div></div>
+  <div class="ppl" id="scope" role="group" aria-label="구분" style="display:none"></div>
   <div class="ppl" id="ppl" role="group" aria-label="담당자"></div>
   <div class="tables" id="tables"></div>
   <div class="dlg" id="dlg" hidden><div class="dlgp" role="dialog" aria-modal="true" aria-labelledby="dtitle"><button class="dx" id="dx" type="button" aria-label="닫기">✕</button><div id="dbody" class="dscroll"></div><div class="dfoot"><button type="button" id="dclose">닫기</button></div></div></div></div>
@@ -253,9 +272,11 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const fmt=v=>v==null?"":typeof v==="number"?v.toLocaleString("ko-KR"):String(v);
 $("upd").textContent="데이터 기준 "+D.updated;
+const ROYONLY=D.mode==="roy";
+if(ROYONLY){document.body.classList.add("roy");document.title="로열티 미납 현황";document.querySelector("h1").textContent="로열티 미납";}
 $("hl").innerHTML=(D.headline||"").split(/\s*\/\s*/).filter(x=>x&&!/제외/.test(x)).map(x=>`<span>${esc(x)}</span>`).join("");
 const mi=s=>s.columns.indexOf("담당자");
-let person="*";
+let person=ROYONLY?"roy":"*";let ROYIDX=0;
 const SKIP=new Set(["담당자","가맹점명","구분","No.","진행상황"]);
 const dt=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)?v.replace(/-/g,"."):v;
 function setup(){
@@ -434,9 +455,51 @@ $("tables").addEventListener("click",e=>{
   const c=e.target.closest(".cd");
   if(c&&!e.target.closest("[data-k]")){CAL.sel=c.dataset.d;
     const d=new Date(CAL.sel+"T00:00:00Z");if(d.getUTCMonth()!==CAL.m){CAL.y=d.getUTCFullYear();CAL.m=d.getUTCMonth()}render()}});
+let ROYP="*";
+const royG=sh=>{const g=sh.columns.indexOf("_grp");return g>=0?g:sh.columns.indexOf("담당자")};
+const royStat=sh=>{const m=royG(sh),a=sh.columns.indexOf("미납금액"),by=new Map();
+  sh.rows.forEach(r=>{const k=r[m]||"미지정";if(!by.has(k))by.set(k,{n:0,t:0});const o=by.get(k);o.n++;o.t+=(+r[a]||0)});
+  return [...by].sort((x,y)=>(x[0]==="담당자 미정")-(y[0]==="담당자 미정")||y[1].t-x[1].t||x[0].localeCompare(y[0],"ko"))};
+function royHTML(){
+  const R=D.roy;if(!R)return"";
+  const sh=R.sheets[ROYIDX];if(!sh)return"";
+  const ci=c=>sh.columns.indexOf(c),mg=royG(sh),ni=ci("가맹점명"),ai=ci("미납금액");
+  const H={"가맹점명":"매장명","미납개월수":"미납개월"};
+  const sel=sh.rows.filter(r=>ROYP===""||ROYP==="*"||(r[mg]||"미지정")===ROYP);
+  const TOT=`<div class="rtot"><span>${ROYP===""||ROYP==="*"?esc(sh.label||sh.name)+" 총 미납금액":esc(ROYP)+" 미납금액"} :</span><b>${fmt(sel.reduce((a,r)=>a+(+r[ai]||0),0))}원</b><em>${sel.length}건</em></div>`;
+  if(ROYP===""){   // 요약: 담당자별 카드
+    const by=new Map();sh.rows.forEach(r=>{const k=r[mg]||"담당자 미정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
+    const st=new Map(royStat(sh));
+    const card=(k,tc)=>{const o=st.get(k);
+      const li=[...by.get(k)].sort((x,y)=>(+y[ai]||0)-(+x[ai]||0)).map(r=>`<li><span class="sn" title="${esc(String(r[ni]).replace(/_.*$/,""))}">${esc(String(r[ni]).replace(/_.*$/,""))}</span><span class="sd amt">${fmt(r[ai])}</span></li>`).join("");
+      return`<article class="pc" style="--tc:${tc}"><header><b>${esc(k)}</b><span>${o.n}건</span></header><ul>${li}<li class="tot"><span class="sn">합계</span><span class="sd amt">${fmt(o.t)}원</span></li></ul></article>`};
+    const used=new Set();
+    const secs=TEAMS.map(([title,names,color])=>{
+      const ks=names.filter(n=>by.has(n)).sort((a,b)=>st.get(b).t-st.get(a).t);ks.forEach(n=>used.add(n));
+      if(!ks.length)return"";
+      const n=ks.reduce((a,k)=>a+st.get(k).n,0),tt=ks.reduce((a,k)=>a+st.get(k).t,0);
+      return`<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <em class="tt">총 미납금액 : ${fmt(tt)}원</em><span>${n}건</span></h2><div class="pgrid">${ks.map(k=>card(k,color)).join("")}</div></section>`});
+    const rest=[...by.keys()].filter(k=>!used.has(k)).sort((a,b)=>(a==="담당자 미정")-(b==="담당자 미정")||st.get(b).t-st.get(a).t);
+    if(rest.length)secs.push(`<section class="team" style="--tc:#777"><h2><i class="dot"></i>담당자 미정 <em class="tt">총 미납금액 : ${fmt(rest.reduce((a,k)=>a+st.get(k).t,0))}원</em><span>${rest.reduce((a,k)=>a+st.get(k).n,0)}건</span></h2><div class="pgrid">${rest.map(k=>card(k,"#777")).join("")}</div></section>`);
+    return`${secs.join("")}`;
+  }
+  const cols=sh.columns.filter(c=>c!=="_grp"&&(ROYP==="*"||ROYP==="담당자 미정"||c!=="담당자"));
+  const rows=sh.rows.filter(r=>ROYP==="*"||(r[mg]||"미지정")===ROYP).sort((x,y)=>(+y[ai]||0)-(+x[ai]||0));
+  const W={"가맹점명":21,"점주명":12,"담당자":12,"미납개월수":12,"미납월":26,"미납금액":17};
+  const head="<colgroup>"+cols.map(c=>`<col style="width:${W[c]||15}%">`).join("")+"</colgroup><thead><tr>"+cols.map(c=>`<th${c==="가맹점명"?' class="nm"':""}>${H[c]||c}</th>`).join("")+"</tr></thead>";
+  const body="<tbody>"+rows.map(r=>"<tr>"+cols.map(c=>{const v=r[ci(c)];
+    if(v==null||v==="")return`<td><span class="na">-</span></td>`;
+    if(c==="가맹점명")return`<td class="nm">${esc(String(v).replace(/_.*$/,""))}</td>`;
+    if(c==="미납금액")return`<td><span class="bad">${fmt(v)}원</span></td>`;
+    if(c==="미납개월수")return`<td>${fmt(v)}개월</td>`;
+    if(c==="미납월")return`<td class="mm">${esc(String(v))}</td>`;
+    return`<td>${esc(String(v))}</td>`}).join("")+"</tr>").join("")+"</tbody>";
+  return`${TOT}<section><div class="wrap" style="max-width:760px"><table class="roy" style="min-width:0">${head+body}</table></div></section>`;
+}
 function render(){
   REG.length=0;
   if(person==="cal"){$("tables").innerHTML=calendarHTML();return}
+  if(person==="roy"){$("tables").innerHTML=royHTML();return}
   // 엑셀 No. 칸에 숫자 대신 "본계약"이 적힌 줄(빨간 글씨)은 따로 모아 맨 위 표로 분리
   const isC=(s,r)=>r[s.columns.indexOf("No.")]==="본계약";
   const s0=D.sheets[0];
@@ -456,7 +519,18 @@ function render(){
   $("tables").innerHTML=total?parts.filter(p=>(p.rows.length||all&&p.title==="오픈대기")&&person!=="").map(p=>`<section><h2>${p.title}</h2><div class="wrap${all?' wall':""}"${sum?' style="max-width:640px"':""}><table${sum?' style="min-width:0"':all?` class="all" style="min-width:${tw}px;width:${tw}px"`:""}>${head}<tbody>${p.rows.map(r=>row(r,p.s,cs)).join("")}</tbody></table></div></section>`).join(""):`<div class="empty">표시할 항목이 없습니다</div>`;
 }
 
-setup();
+if(ROYONLY){
+  const sc=$("scope");sc.style.display="";
+  const draw=()=>{
+    const sh=D.roy.sheets[ROYIDX],st=royStat(sh),tot=sh.rows.length;
+    if(ROYP!=="*"&&ROYP!==""&&!st.some(x=>x[0]===ROYP))ROYP="*";
+    sc.innerHTML=D.roy.sheets.map((x,i)=>`<button data-s="${i}" aria-pressed="${i===ROYIDX}">${esc(x.label||x.name)} <span>${x.rows.length}</span></button>`).join("");
+    $("ppl").innerHTML=[["*","전체",tot],["","요약",tot],...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","박정섭","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
+  draw();
+  sc.onclick=e=>{const b=e.target.closest("button");if(!b)return;ROYIDX=+b.dataset.s;draw();render()};
+  $("ppl").onclick=e=>{const b=e.target.closest("button");if(!b)return;ROYP=b.dataset.p;draw();render()};
+  render();
+}else setup();
 </script>
 
 </body></html>
