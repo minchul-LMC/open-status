@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"></head><body>
-<title>오픈현황</title>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>로열티 미납</title><meta property="og:title" content="로열티 미납"><meta property="og:site_name" content="로열티 미납"><meta property="og:type" content="website"></head><body>
+<title>로열티 미납</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <style>
 /* 레이아웃: 상단 요약 → 시트 탭 → 검색/필터 → 표. 청회색 바탕 + 청록 포인트 */
@@ -556,7 +556,7 @@ function placeMeta(){const f=$("foot");
   else if(META.parentNode===f&&MH.p){MH.p.insertBefore(META,MH.n&&MH.n.parentNode===MH.p?MH.n:null)}}
 function showView(roy){
   ROYONLY=roy;document.body.classList.toggle("roy",roy);
-  document.title=roy?"로열티 미납 현황":T0;document.querySelector("h1").textContent=roy?"로열티 미납":"오픈현황";
+  document.title=roy?"로열티 미납":T0;document.querySelector("h1").textContent=roy?"로열티 미납":"오픈현황";
   $("hl").style.display=roy?"none":"";sc.style.display=roy?"":"none";
   $("upd").textContent="데이터 기준 "+(roy&&D.roy&&D.roy.updated?D.roy.updated:D.updated);
   if(BOTH)[...$("view").children].forEach(x=>x.setAttribute("aria-pressed",(x.dataset.v==="roy")===roy));
