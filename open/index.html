@@ -557,7 +557,7 @@ function placeMeta(){const f=$("foot");
 function showView(roy){
   ROYONLY=roy;document.body.classList.toggle("roy",roy);
   document.title=roy?"로열티 미납":T0;document.querySelector("h1").textContent=roy?"로열티 미납":"오픈현황";
-  $("hl").style.display=roy?"none":"";sc.style.display=roy?"":"none";
+  $("hl").style.display=roy?"none":"";sc.style.display=roy&&D.roy&&D.roy.sheets.length>1?"":"none";
   $("upd").textContent="데이터 기준 "+(roy&&D.roy&&D.roy.updated?D.roy.updated:D.updated);
   if(BOTH)[...$("view").children].forEach(x=>x.setAttribute("aria-pressed",(x.dataset.v==="roy")===roy));
   if(roy){person="roy";draw();render()}else{person="*";setup()}
