@@ -111,7 +111,7 @@ body.roy h1{white-space:nowrap}@media(max-width:640px){body.roy h1{font-size:24p
 .rtot{display:flex;align-items:baseline;gap:10px;margin:0 0 -14px 0;color:#fff;font-size:21px;font-weight:900;letter-spacing:-.02em}.rtot>span,.rtot b{font-size:21px;font-weight:900;color:#fff;letter-spacing:-.02em}@media(max-width:640px){.rtot{gap:6px;white-space:nowrap}.rtot>span,.rtot b{font-size:17px}.rtot em{font-size:12px}}
 .rtot em{font-style:normal;font-size:13px;font-weight:500;letter-spacing:0;color:var(--mut)}
 table.roy td.mm{font-size:12px;line-height:1.4;white-space:normal;word-break:keep-all;font-variant-numeric:tabular-nums}
-@media(max-width:640px){table.roy .fb{right:1px;padding:0 3px;font-size:10px}table.roy{min-width:0!important;width:100%!important}table.roy td{font-size:10.5px;padding:7px 1px;line-height:1.35;white-space:normal;word-break:normal;overflow-wrap:anywhere;overflow:visible;text-overflow:clip}table.roy td .bad{white-space:nowrap}table.roy th{font-size:9.5px;padding-left:2px;padding-right:13px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.2}table.roy td.nm{white-space:normal;overflow:visible;text-overflow:clip;word-break:normal;overflow-wrap:anywhere}table.roy td.mm{font-size:10.5px;word-break:keep-all}}
+@media(max-width:640px){table.roy .fb{right:1px;padding:0 3px;font-size:10px}table.roy.nf th{padding-left:2px;padding-right:2px}table.roy{min-width:0!important;width:100%!important}table.roy td{font-size:10.5px;padding:7px 1px;line-height:1.35;white-space:normal;word-break:normal;overflow-wrap:anywhere;overflow:visible;text-overflow:clip}table.roy td .bad{white-space:nowrap}table.roy th{font-size:9.5px;padding-left:2px;padding-right:13px;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.2}table.roy td.nm{white-space:normal;overflow:visible;text-overflow:clip;word-break:normal;overflow-wrap:anywhere}table.roy td.mm{font-size:10.5px;word-break:keep-all}}
 .roynote{margin:12px 2px 0;color:#9aa4ae;font-size:12px}
 td.pr{text-align:left;padding:3px 8px;font-size:11.5px;white-space:normal;word-break:keep-all;overflow:visible;text-overflow:clip;line-height:1.2}
 tbody tr[data-k],.pc li[data-k]{cursor:pointer}
@@ -268,7 +268,7 @@ tbody tr[data-k]:hover td{background:#eaf4f3}
 .team h2 em.tt~span{margin-left:0}
 body.roy .tables .team h2{margin-bottom:8px}
 .team h2 em.tt{font-style:normal;margin-left:12px;font-size:21px;font-weight:900;letter-spacing:-.02em;color:#fff}
-@media(max-width:700px){.team h2 em.tt{display:block;margin:4px 0 0 0;font-size:19px}}
+@media(max-width:700px){.team h2{gap:6px;white-space:nowrap}.team h2 em.tt{margin-left:4px;font-size:15px;letter-spacing:-.03em}}
 </style>
 <div class="page">
   <div class="ppl" id="view" role="group" aria-label="보기" style="display:none"></div>
@@ -487,11 +487,11 @@ function royHTML(){
     const by=new Map();sh.rows.forEach(r=>{const k=r[mg]||"담당자 미정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
     const st=new Map(royStat(sh));
     const card=(k,tc)=>{const o=st.get(k);
-      const li=[...by.get(k)].sort((x,y)=>(+y[ai]||0)-(+x[ai]||0)).map(r=>`<li><span class="sn" title="${esc(String(r[ni]).replace(/_.*$/,""))}">${esc(String(r[ni]).replace(/_.*$/,""))}</span><span class="sd amt">${fmt(r[ai])}</span></li>`).join("");
+      const li=[...by.get(k)].sort((x,y)=>(+y[ai]||0)-(+x[ai]||0)).map(r=>`<li><span class="sn" title="${esc(String(r[ni]).replace(/_.*$/,""))}">${esc(String(r[ni]).replace(/_.*$/,""))}</span><span class="sd amt">${fmt(r[ai])}원</span></li>`).join("");
       return`<article class="pc" style="--tc:${tc}"><header><b>${esc(k)}</b><span>${o.n}건</span></header><ul>${li}<li class="tot"><span class="sn">합계</span><span class="sd amt">${fmt(o.t)}원</span></li></ul></article>`};
     const used=new Set();
     const secs=TEAMS.map(([title,names,color])=>{
-      const ks=names.filter(n=>by.has(n)).sort((a,b)=>st.get(b).t-st.get(a).t);ks.forEach(n=>used.add(n));
+      const ks=names.filter(n=>by.has(n));ks.forEach(n=>used.add(n));
       if(!ks.length)return"";
       const n=ks.reduce((a,k)=>a+st.get(k).n,0),tt=ks.reduce((a,k)=>a+st.get(k).t,0);
       return`<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <em class="tt">총 미납금액 : ${fmt(tt)}원</em><span>${n}건</span></h2><div class="pgrid">${ks.map(k=>card(k,color)).join("")}</div></section>`});
@@ -512,7 +512,7 @@ function royHTML(){
     if(c==="미납월")return`<td class="mm">${esc(String(v))}</td>`;
     return`<td>${esc(String(v))}</td>`}).join("")+"</tr>").join("")+"</tbody>";
   if(!rows.length)return`${TOT}<div class="empty">표시할 항목이 없습니다</div>`;
-  return`${TOT}<section><div class="wrap" style="max-width:980px"><table class="roy" style="min-width:0">${head+body}</table></div></section>`;
+  return`${TOT}<section><div class="wrap" style="max-width:980px"><table class="roy${ROYP==="*"?"":" nf"}" style="min-width:0">${head+body}</table></div></section>`;
 }
 function render(){
   REG.length=0;
