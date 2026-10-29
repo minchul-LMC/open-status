@@ -184,6 +184,10 @@ tbody tr[data-k]:hover td{background:#eaf4f3}
 @media(max-width:640px){h1{font-size:30px}.upd{font-size:11px}.tables h2{font-size:19px}}
 .vrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px 12px;flex-wrap:wrap;margin-bottom:-14px}
 .tl #scope.ppl{margin:0;align-self:center}
+.seg{display:flex;width:fit-content;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);margin:0 0 14px}
+.seg button{all:unset;cursor:pointer;box-sizing:border-box;padding:8px 22px;border-radius:10px;color:#c4c8cd;font-size:15px;font-weight:700;white-space:nowrap}
+.seg button:hover{color:#fff}.seg button span{opacity:.7;font-size:13px;margin-left:2px}
+.seg button[aria-pressed=true]{background:color-mix(in srgb,var(--tc) 78%,#000);color:#fff;box-shadow:0 6px 16px -8px var(--tc)}
 .vl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 #share{all:unset;cursor:pointer;box-sizing:border-box;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;color:#c4c8cd;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16)}
 #share:hover{color:#fff;background:rgba(255,255,255,.14)}
@@ -471,7 +475,7 @@ $("tables").addEventListener("click",e=>{
   const c=e.target.closest(".cd");
   if(c&&!e.target.closest("[data-k]")){CAL.sel=c.dataset.d;
     const d=new Date(CAL.sel+"T00:00:00Z");if(d.getUTCMonth()!==CAL.m){CAL.y=d.getUTCFullYear();CAL.m=d.getUTCMonth()}render()}});
-let ROYP="*";
+let ROYP="*";let ROYTEAM=0;
 const royG=sh=>{const g=sh.columns.indexOf("_grp");return g>=0?g:sh.columns.indexOf("담당자")};
 const royStat=sh=>{const m=royG(sh),a=sh.columns.indexOf("미납금액"),by=new Map();
   sh.rows.forEach(r=>{const k=r[m]||"미지정";if(!by.has(k))by.set(k,{n:0,t:0});const o=by.get(k);o.n++;o.t+=(+r[a]||0)});
@@ -484,7 +488,7 @@ function royHTML(){
   const rf=r=>ROYP!=="*"||Object.keys(RFILT).every(c=>!RFILT[c]||RFILT[c].has(rval(r,sh,c)));
   const sel=sh.rows.filter(r=>(ROYP===""||ROYP==="*"||(r[mg]||"미지정")===ROYP)&&rf(r));
   const TOT=`<div class="rtot"><span>${ROYP===""||ROYP==="*"?esc(sh.label||sh.name)+" 총 미납금액":esc(ROYP)+" 미납금액"} :</span><b>${fmt(sel.reduce((a,r)=>a+(+r[ai]||0),0))}원</b><em>${sel.length}건</em></div>`;
-  if(ROYP===""){   // 요약: 담당자별 카드
+  if(ROYP===""||ROYP[0]==="@"){   // 팀별 요약: 담당자별 카드
     const by=new Map();sh.rows.forEach(r=>{const k=r[mg]||"담당자 미정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
     const st=new Map(royStat(sh));
     const card=(k,tc)=>{const o=st.get(k);
@@ -493,12 +497,13 @@ function royHTML(){
     const used=new Set();
     const secs=TEAMS.map(([title,names,color])=>{
       const ks=names.filter(n=>by.has(n));ks.forEach(n=>used.add(n));
-      if(!ks.length)return"";
+      if(!ks.length)return null;
       const n=ks.reduce((a,k)=>a+st.get(k).n,0),tt=ks.reduce((a,k)=>a+st.get(k).t,0);
-      return`<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <em class="tt">총 미납금액 : ${fmt(tt)}원</em><span>${n}건</span></h2><div class="pgrid">${ks.map(k=>card(k,color)).join("")}</div></section>`});
+      return{t:title,c:color,n,h:`<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <em class="tt">총 미납금액 : ${fmt(tt)}원</em><span>${n}건</span></h2><div class="pgrid">${ks.map(k=>card(k,color)).join("")}</div></section>`}}).filter(Boolean);
     const rest=[...by.keys()].filter(k=>!used.has(k)).sort((a,b)=>(a==="담당자 미정")-(b==="담당자 미정")||st.get(b).t-st.get(a).t);
-    if(rest.length)secs.push(`<section class="team" style="--tc:#777"><h2><i class="dot"></i>담당자 미정 <em class="tt">총 미납금액 : ${fmt(rest.reduce((a,k)=>a+st.get(k).t,0))}원</em><span>${rest.reduce((a,k)=>a+st.get(k).n,0)}건</span></h2><div class="pgrid">${rest.map(k=>card(k,"#777")).join("")}</div></section>`);
-    return`${secs.join("")}`;
+    if(rest.length)secs.push({t:"담당자 미정",c:"#777",n:rest.reduce((a,k)=>a+st.get(k).n,0),h:`<section class="team" style="--tc:#777"><h2><i class="dot"></i>담당자 미정 <em class="tt">총 미납금액 : ${fmt(rest.reduce((a,k)=>a+st.get(k).t,0))}원</em><span>${rest.reduce((a,k)=>a+st.get(k).n,0)}건</span></h2><div class="pgrid">${rest.map(k=>card(k,"#777")).join("")}</div></section>`});
+    const pick=ROYP===""?secs:secs.filter(x=>"@"+x.t===ROYP);
+    return pick.map(x=>x.h).join("");
   }
   const RO=["가맹점명","담당자","점주명","미납개월수","미납금액","미납월"];let cols=sh.columns.filter(c=>c!=="_grp"&&(ROYP==="*"||ROYP==="담당자 미정"||c!=="담당자")).sort((x,y)=>RO.indexOf(x)-RO.indexOf(y));
   const rows=sh.rows.filter(r=>(ROYP==="*"||(r[mg]||"미지정")===ROYP)&&rf(r)).sort((x,y)=>(+y[ai]||0)-(+x[ai]||0));
@@ -544,9 +549,13 @@ const sc=$("scope");
 if(D.roy)document.querySelector(".tl").insertBefore(sc,$("hl"));
   const draw=()=>{
     const sh=D.roy.sheets[ROYIDX],st=royStat(sh),tot=sh.rows.length;
-    if(ROYP!=="*"&&ROYP!==""&&!st.some(x=>x[0]===ROYP))ROYP="*";
+    const gset=new Set(st.map(x=>x[0]));const tabs=TEAMS.map(([t,ns])=>[t,ns.filter(n=>gset.has(n))]).filter(x=>x[1].length)
+      .map(([t,ns])=>["@"+t,t,st.filter(x=>ns.includes(x[0])).reduce((a,x)=>a+x[1].n,0)]);
+    const usedN=new Set(TEAMS.flatMap(x=>x[1]));const restN=st.filter(x=>!usedN.has(x[0])).reduce((a,x)=>a+x[1].n,0);
+    if(restN)tabs.push(["@담당자 미정","담당자 미정",restN]);
+    if(ROYP!=="*"&&!st.some(x=>x[0]===ROYP)&&!tabs.some(x=>x[0]===ROYP))ROYP="*";
     sc.innerHTML=D.roy.sheets.map((x,i)=>`<button data-s="${i}" aria-pressed="${i===ROYIDX}">${esc(x.label||x.name)} <span>${x.rows.length}</span></button>`).join("");
-    $("ppl").innerHTML=[["*","전체",tot],["","요약",tot],...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","박정섭","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
+    $("ppl").innerHTML=[["*","전체",tot],...tabs,...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","박정섭","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
 sc.onclick=e=>{const b=e.target.closest("button");if(!b)return;ROYIDX=+b.dataset.s;for(const k in RFILT)delete RFILT[k];fpop.hidden=true;draw();render()};
 $("ppl").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(ROYONLY){ROYP=b.dataset.p;draw();render()}
