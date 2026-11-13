@@ -285,7 +285,7 @@ body.roy .tables .team h2{margin-bottom:8px}
   <div class="dlg" id="dlg" hidden><div class="dlgp" role="dialog" aria-modal="true" aria-labelledby="dtitle"><button class="dx" id="dx" type="button" aria-label="닫기">✕</button><div id="dbody" class="dscroll"></div><div class="dfoot"><button type="button" id="dclose">닫기</button></div></div></div></div>
 </div>
 <script>
-const D={"mode":"roy","updated":"2026-11-13 10:20","headline":"","sheets":[],"roy":{"updated":"2026-11-13 10:20","sheets":[{"name":"운영","label":"운영","title":"운영 로열티 미납","columns":["가맹점명","점주명","담당자","미납개월수","미납월","미납금액","_grp"],"rows":[["미사점","홍금녀","오영훈",1,"2610",330000,"오영훈"],["부산모전점","이상열","지승환",1,"2610",330000,"지승환"],["원주자유시장점","박준석","김준",1,"2610",330000,"김준"],["제천내토점","손미경","김준",1,"2610",330000,"김준"],["울산간절곶점","이정숙","오영훈",1,"2610",330000,"오영훈"],["평택안중점","장용중","지승환",1,"2610",330000,"지승환"],["수원대점","김영석","김준",1,"2610",330000,"김준"],["여주스카이밸리점","강대희","김준",1,"2610",330000,"김준"],["진천이월점","윤원용","홍주완",1,"2610",330000,"홍주완"],["창동역점","김연주","지승환",1,"2610",330000,"지승환"],["세종번암점","권정희","이병두",1,"2610",330000,"이병두"],["다산부영프라자점","이동후","지승환",1,"2610",330000,"지승환"],["창원시청점","허희선","홍주완",1,"2610",330000,"홍주완"],["세종용포점","한주영","이병두",1,"2610",330000,"이병두"],["원주시청점","김용삼","김준",1,"2610",330000,"김준"],["남위례점","한대윤","김준",1,"2610",330000,"김준"],["도농사거리점","임기복","지승환",3,"2608, 2609, 2610",990000,"지승환"],["대구사수점","손지효","지승환",1,"2610",330000,"지승환"],["물류 신안임자도점","함수경","김동혁",1,"2610",330000,"김동혁"]]}]}};
+const D={"mode":"roy","updated":"2026-11-13 10:26","headline":"","sheets":[],"roy":{"updated":"2026-11-13 10:26","sheets":[{"name":"운영","label":"운영","title":"운영 로열티 미납","columns":["가맹점명","점주명","담당자","미납개월수","미납월","미납금액","_grp"],"rows":[["미사점","홍금녀","오영훈",1,"2610",330000,"오영훈"],["부산모전점","이상열","지승환",1,"2610",330000,"지승환"],["원주자유시장점","박준석","김준",1,"2610",330000,"김준"],["제천내토점","손미경","김준",1,"2610",330000,"김준"],["울산간절곶점","이정숙","오영훈",1,"2610",330000,"오영훈"],["평택안중점","장용중","지승환",1,"2610",330000,"지승환"],["수원대점","김영석","김준",1,"2610",330000,"김준"],["여주스카이밸리점","강대희","김준",1,"2610",330000,"김준"],["진천이월점","윤원용","홍주완",1,"2610",330000,"홍주완"],["창동역점","김연주","지승환",1,"2610",330000,"지승환"],["세종번암점","권정희","이병두",1,"2610",330000,"이병두"],["다산부영프라자점","이동후","지승환",1,"2610",330000,"지승환"],["창원시청점","허희선","홍주완",1,"2610",330000,"홍주완"],["세종용포점","한주영","이병두",1,"2610",330000,"이병두"],["원주시청점","김용삼","김준",1,"2610",330000,"김준"],["남위례점","한대윤","김준",1,"2610",330000,"김준"],["도농사거리점","임기복","지승환",3,"2608, 2609, 2610",990000,"지승환"],["대구사수점","손지효","지승환",1,"2610",330000,"지승환"],["물류 신안임자도점","함수경","김동혁",1,"2610",330000,"김동혁"]]}]}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const fmt=v=>v==null?"":typeof v==="number"?v.toLocaleString("ko-KR"):String(v);
@@ -302,7 +302,7 @@ function setup(){
   D.sheets.forEach(s=>{const m=mi(s);s.rows.forEach(r=>{const k=(m>=0&&r[m])||"미지정";if(!cnt.has(k))cnt.set(k,0)})});
   const w=D.sheets[0],wm=mi(w),wn=w.columns.indexOf("No.");
   w.rows.forEach(r=>{if(r[wn]==="본계약")return;const k=(wm>=0&&r[wm])||"미지정";cnt.set(k,cnt.get(k)+1);total++});
-  const ORD=["이영현","홍주완","오영훈","지승환","김준","박은진","이병두","김동혁"];
+  const ORD=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","이병두","김동혁"];
   const rank=k=>{const i=ORD.indexOf(k);return i<0?(k==="미지정"?999:100):i};   // 정해 둔 순서, 목록에 없는 담당자는 그 뒤
   const names=[...cnt].sort((a,b)=>rank(a[0])-rank(b[0])||a[0].localeCompare(b[0],"ko"));
   $("ppl").innerHTML=[["*","전체",total],["cal","일정",null],["","요약",total],...names.map(([k,n])=>[k,k,n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===person}">${esc(l)}${n==null?"":` <span>${n}</span>`}</button>`).join("");
@@ -348,7 +348,7 @@ function sorted(s){
   return [...rows].sort((a,b)=>{const x=key(a),y=key(b);
     return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]||cmp(x[3],y[3])||(x[0]?edu(a)-edu(b):0)||cmp(gye(a),gye(b))});
 }
-const TEAMS=[["1팀",["이영현","홍주완","오영훈","지승환","김준"],"#ee7d7d"],["2팀",["박은진","이병두","김동혁"],"#79a3f2"]];
+const TEAMS=[["1팀",["이영현","홍주완","오영훈","지승환","김준"],"#ee7d7d"],["2팀",["박은진","이병철","이병두","김동혁"],"#79a3f2"]];
 function summaryHTML(p){
   const s=p.s,m=s.columns.indexOf("담당자"),ni=s.columns.indexOf("가맹점명"),oi=s.columns.indexOf("오픈예정일");
   const by=new Map();p.rows.forEach(r=>{const k=r[m]||"미지정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
@@ -429,7 +429,7 @@ const passF=(r,s)=>Object.keys(FILT).every(c=>!FILT[c]||FILT[c].has(fval(r,s,c))
 const fpop=document.createElement("div");fpop.id="fpop";fpop.hidden=true;document.body.appendChild(fpop);
 const keepScroll=fn=>{const w=document.querySelector(".wall"),a=w?[w.scrollLeft,w.scrollTop]:null;fn();const n=document.querySelector(".wall");if(n&&a){n.scrollLeft=a[0];n.scrollTop=a[1]}};
 function openFilter(th,c){
-  const SH=ROYONLY?[D.roy.sheets[ROYIDX]]:D.sheets,FS=ROYONLY?RFILT:FILT,FV=ROYONLY?rval:fval;
+  const SH=ROYONLY?[ROYP==="@prev"&&D.roy.prev?D.roy.prev.sheets[0]:D.roy.sheets[ROYIDX]]:D.sheets,FS=ROYONLY?RFILT:FILT,FV=ROYONLY?rval:fval;
   const cnt=new Map();SH.forEach(s=>s.rows.forEach(r=>{const v=FV(r,s,c);cnt.set(v,(cnt.get(v)||0)+1)}));
   const vals=[...cnt.keys()].sort((a,b)=>a==="(빈값)"?1:b==="(빈값)"?-1:a.localeCompare(b,"ko",{numeric:true}));
   const sel=FS[c]?new Set(FS[c]):new Set(vals);
@@ -495,13 +495,14 @@ const royStat=sh=>{const m=royG(sh),a=sh.columns.indexOf("미납금액"),by=new 
   return [...by].sort((x,y)=>(x[0]==="담당자 미정")-(y[0]==="담당자 미정")||y[1].t-x[1].t||x[0].localeCompare(y[0],"ko"))};
 function royHTML(){
   const R=D.roy;if(!R)return"";
-  const sh=R.sheets[ROYIDX];if(!sh)return"";
+  const PV=ROYP==="@prev"&&!!R.prev,RP=PV?"*":ROYP;
+  const sh=PV?R.prev.sheets[0]:R.sheets[ROYIDX];if(!sh)return"";
   const ci=c=>sh.columns.indexOf(c),mg=royG(sh),ni=ci("가맹점명"),ai=ci("미납금액");
   const H={"가맹점명":"매장명","미납개월수":"미납개월"};
-  const rf=r=>ROYP!=="*"||Object.keys(RFILT).every(c=>!RFILT[c]||RFILT[c].has(rval(r,sh,c)));
-  const sel=sh.rows.filter(r=>(ROYP===""||ROYP==="*"||(r[mg]||"미지정")===ROYP)&&rf(r));
-  const TOT=`<div class="rtot"><span>${ROYP===""||ROYP==="*"?esc(sh.label||sh.name)+" 총 미납금액":esc(ROYP)+" 미납금액"} :</span><b>${fmt(sel.reduce((a,r)=>a+(+r[ai]||0),0))}원</b><em>${sel.length}건</em></div>`;
-  if(ROYP===""||ROYP[0]==="@"){   // 팀별 요약: 담당자별 카드
+  const rf=r=>RP!=="*"||Object.keys(RFILT).every(c=>!RFILT[c]||RFILT[c].has(rval(r,sh,c)));
+  const sel=sh.rows.filter(r=>(RP===""||RP==="*"||(r[mg]||"미지정")===RP)&&rf(r));
+  const TOT=`<div class="rtot"><span>${PV?esc(R.prev.label)+" 기준 총 미납금액":RP===""||RP==="*"?esc(sh.label||sh.name)+" 총 미납금액":esc(RP)+" 미납금액"} :</span><b>${fmt(sel.reduce((a,r)=>a+(+r[ai]||0),0))}원</b><em>${sel.length}건</em></div>`;
+  if(RP===""||RP[0]==="@"){   // 팀별 요약: 담당자별 카드
     const by=new Map();sh.rows.forEach(r=>{const k=r[mg]||"담당자 미정";if(!by.has(k))by.set(k,[]);by.get(k).push(r)});
     const st=new Map(royStat(sh));
     const card=(k,tc)=>{const o=st.get(k);
@@ -515,14 +516,14 @@ function royHTML(){
       return{t:title,c:color,n,h:`<section class="team" style="--tc:${color}"><h2><i class="dot"></i>${title} <em class="tt">총 미납금액 : ${fmt(tt)}원</em><span>${n}건</span></h2><div class="pgrid">${ks.map(k=>card(k,color)).join("")}</div></section>`}}).filter(Boolean);
     const rest=[...by.keys()].filter(k=>!used.has(k)).sort((a,b)=>(a==="담당자 미정")-(b==="담당자 미정")||st.get(b).t-st.get(a).t);
     if(rest.length)secs.push({t:"담당자 미정",c:"#777",n:rest.reduce((a,k)=>a+st.get(k).n,0),h:`<section class="team" style="--tc:#777"><h2><i class="dot"></i>담당자 미정 <em class="tt">총 미납금액 : ${fmt(rest.reduce((a,k)=>a+st.get(k).t,0))}원</em><span>${rest.reduce((a,k)=>a+st.get(k).n,0)}건</span></h2><div class="pgrid">${rest.map(k=>card(k,"#777")).join("")}</div></section>`});
-    const pick=ROYP===""?secs:secs.filter(x=>"@"+x.t===ROYP);
+    const pick=RP===""?secs:secs.filter(x=>"@"+x.t===RP);
     return pick.map(x=>x.h).join("");
   }
-  const RO=["가맹점명","담당자","점주명","미납개월수","미납금액","미납월"];let cols=sh.columns.filter(c=>c!=="_grp"&&(ROYP==="*"||ROYP==="담당자 미정"||c!=="담당자")).sort((x,y)=>RO.indexOf(x)-RO.indexOf(y));
-  const rows=sh.rows.filter(r=>(ROYP==="*"||(r[mg]||"미지정")===ROYP)&&rf(r)).sort((x,y)=>(+y[ai]||0)-(+x[ai]||0));
+  const RO=["가맹점명","담당자","점주명","미납개월수","미납금액","미납월"];let cols=sh.columns.filter(c=>c!=="_grp"&&(RP==="*"||RP==="담당자 미정"||c!=="담당자")).sort((x,y)=>RO.indexOf(x)-RO.indexOf(y));
+  const rows=sh.rows.filter(r=>(RP==="*"||(r[mg]||"미지정")===RP)&&rf(r)).sort((x,y)=>(+y[ai]||0)-(+x[ai]||0));
   const W={"가맹점명":18,"점주명":10,"담당자":10,"미납개월수":10,"미납월":38,"미납금액":14};
   if(matchMedia("(max-width:640px)").matches){cols=cols.filter(c=>c!=="미납월");Object.assign(W,{"가맹점명":20,"점주명":11.5,"담당자":11.5,"미납개월수":13,"미납월":21.5,"미납금액":22.5});const sm=cols.reduce((n,c)=>n+(W[c]||15),0);cols.forEach(c=>{W[c]=(W[c]||15)*100/sm})}
-  const head="<colgroup>"+cols.map(c=>`<col style="width:${W[c]||15}%">`).join("")+"</colgroup><thead><tr>"+cols.map(c=>`<th${c==="가맹점명"?' class="nm"':""}>${H[c]||c}${ROYP==="*"?`<b class="fb${RFILT[c]?" on":""}" data-c="${c}" title="필터">▾</b>`:""}</th>`).join("")+"</tr></thead>";
+  const head="<colgroup>"+cols.map(c=>`<col style="width:${W[c]||15}%">`).join("")+"</colgroup><thead><tr>"+cols.map(c=>`<th${c==="가맹점명"?' class="nm"':""}>${H[c]||c}${RP==="*"?`<b class="fb${RFILT[c]?" on":""}" data-c="${c}" title="필터">▾</b>`:""}</th>`).join("")+"</tr></thead>";
   const body="<tbody>"+rows.map(r=>"<tr>"+cols.map(c=>{const v=r[ci(c)];
     if(v==null||v==="")return`<td><span class="na">-</span></td>`;
     if(c==="가맹점명")return`<td class="nm">${esc(String(v).replace(/_.*$/,""))}</td>`;
@@ -531,7 +532,7 @@ function royHTML(){
     if(c==="미납월")return`<td class="mm">${esc(String(v))}</td>`;
     return`<td>${esc(String(v))}</td>`}).join("")+"</tr>").join("")+"</tbody>";
   if(!rows.length)return`${TOT}<div class="empty">표시할 항목이 없습니다</div>`;
-  return`${TOT}<section><div class="wrap" style="max-width:980px"><table class="roy${ROYP==="*"?"":" nf"}" style="min-width:0">${head+body}</table></div></section>`;
+  return`${TOT}<section><div class="wrap" style="max-width:980px"><table class="roy${RP==="*"?"":" nf"}" style="min-width:0">${head+body}</table></div></section>`;
 }
 function render(){
   REG.length=0;
@@ -566,12 +567,12 @@ if(D.roy)document.querySelector(".tl").insertBefore(sc,$("hl"));
       .map(([t,ns])=>["@"+t,t,st.filter(x=>ns.includes(x[0])).reduce((a,x)=>a+x[1].n,0)]);
     const usedN=new Set(TEAMS.flatMap(x=>x[1]));const restN=st.filter(x=>!usedN.has(x[0])).reduce((a,x)=>a+x[1].n,0);
     if(restN)tabs.push(["@담당자 미정","담당자 미정",restN]);
-    if(ROYP!=="*"&&!st.some(x=>x[0]===ROYP)&&!tabs.some(x=>x[0]===ROYP))ROYP="*";
+    if(ROYP!=="*"&&ROYP!=="@prev"&&!st.some(x=>x[0]===ROYP)&&!tabs.some(x=>x[0]===ROYP))ROYP="*";
     sc.innerHTML=D.roy.sheets.map((x,i)=>`<button data-s="${i}" aria-pressed="${i===ROYIDX}">${esc(x.label||x.name)} <span>${x.rows.length}</span></button>`).join("");
-    $("ppl").innerHTML=[["*","전체",tot],...tabs,...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병두","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
+    $("ppl").innerHTML=[["*","전체",tot],...(D.roy.prev?[["@prev","말일 기준",D.roy.prev.sheets[0].rows.length]]:[]),...tabs,...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","이병두","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
 sc.onclick=e=>{const b=e.target.closest("button");if(!b)return;ROYIDX=+b.dataset.s;for(const k in RFILT)delete RFILT[k];fpop.hidden=true;draw();render()};
 $("ppl").onclick=e=>{const b=e.target.closest("button");if(!b)return;
-  if(ROYONLY){ROYP=b.dataset.p;draw();render()}
+  if(ROYONLY){const np=b.dataset.p;if((np==="@prev")!==(ROYP==="@prev")){for(const k in RFILT)delete RFILT[k];fpop.hidden=true}ROYP=np;draw();render()}
   else{person=b.dataset.p;[...$("ppl").children].forEach(x=>x.setAttribute("aria-pressed",x===b));render()}};
 const META=document.querySelector(".meta"),MH={p:null,n:null},MQ=matchMedia("(max-width:640px)");
 function placeMeta(){const f=$("foot");
