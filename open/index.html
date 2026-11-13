@@ -569,7 +569,7 @@ if(D.roy)document.querySelector(".tl").insertBefore(sc,$("hl"));
     if(restN)tabs.push(["@담당자 미정","담당자 미정",restN]);
     if(ROYP!=="*"&&ROYP!=="@prev"&&!st.some(x=>x[0]===ROYP)&&!tabs.some(x=>x[0]===ROYP))ROYP="*";
     sc.innerHTML=D.roy.sheets.map((x,i)=>`<button data-s="${i}" aria-pressed="${i===ROYIDX}">${esc(x.label||x.name)} <span>${x.rows.length}</span></button>`).join("");
-    $("ppl").innerHTML=[["*","전체",tot],...(D.roy.prev?[["@prev","말일 기준",D.roy.prev.sheets[0].rows.length]]:[]),...tabs,...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","이병두","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
+    $("ppl").innerHTML=[["*","전체",tot],...(D.roy.prev?[["@prev","전월",D.roy.prev.sheets[0].rows.length]]:[]),...tabs,...[...st].sort((x,y)=>{const O=["이영현","홍주완","오영훈","지승환","김준","박은진","이병철","이병두","김동혁"],r=k=>{const i=O.indexOf(k);return i<0?(k==="담당자 미정"||k==="미지정"?999:100):i};return r(x[0])-r(y[0])||x[0].localeCompare(y[0],"ko")}).map(([k,o])=>[k,k,o.n])].map(([k,l,n])=>`<button data-p="${esc(k)}" aria-pressed="${k===ROYP}">${esc(l)} <span>${n}</span></button>`).join("")};
 sc.onclick=e=>{const b=e.target.closest("button");if(!b)return;ROYIDX=+b.dataset.s;for(const k in RFILT)delete RFILT[k];fpop.hidden=true;draw();render()};
 $("ppl").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(ROYONLY){const np=b.dataset.p;if((np==="@prev")!==(ROYP==="@prev")){for(const k in RFILT)delete RFILT[k];fpop.hidden=true}ROYP=np;draw();render()}
