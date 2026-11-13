@@ -541,7 +541,7 @@ function render(){
   // 엑셀 No. 칸에 숫자 대신 "본계약"이 적힌 줄(빨간 글씨)은 따로 모아 맨 위 표로 분리
   const isC=(s,r)=>r[s.columns.indexOf("No.")]==="본계약";
   const s0=D.sheets[0];
-  const cRows=D.sheets.flatMap(s=>s.rows.filter(r=>isC(s,r)));
+  const cRows=D.sheets.flatMap(s=>s.rows.filter(r=>isC(s,r)).map(r=>s0.columns.map(c=>{const i=s.columns.indexOf(c);return i<0?null:r[i]})));   // 시트마다 칸 구성이 달라도 이름으로 맞춰 넣음
   const parts=[{title:"오픈완료",s:s0,rows:sorted({columns:s0.columns,rows:cRows})},
     ...D.sheets.map((s,i)=>({title:["오픈대기","명변, 양수, 이전 예정"][i]||s.title,s,rows:sorted({columns:s.columns,rows:s.rows.filter(r=>!isC(s,r))})}))];
   const total=parts.reduce((n,p)=>n+p.rows.length,0)||1;
